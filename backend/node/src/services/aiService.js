@@ -160,30 +160,31 @@ class AIService {
     const name = recipient || "someone";
     const isToast = vibe && vibe.toLowerCase().includes("toast");
 
-    // Cultural instruction based on language
+    // Cultural instruction forcing simple, everyday language
     let culturalContext = "";
     if (language.toLowerCase() === "marathi") {
-      culturalContext = "Use authentic Marathi cultural references. If roasting, use lighthearted 'Puneri' sarcasm. If toasting, use poetic and respectful words.";
+      culturalContext = "Use extremely simple, everyday Marathi. If roasting, use funny, relatable 'tomne' (taunts) that friends use with each other. If toasting, be warm but keep it casual, like a heartfelt WhatsApp message. ABSOLUTELY NO formal, bookish, or heavy Marathi words.";
     } else if (language.toLowerCase() === "hindi") {
-      culturalContext = "Use natural, conversational Hindi. If roasting, use 'Desi' humor and funny analogies. If toasting, use warm and 'Shayari-style' touch if appropriate.";
+      culturalContext = "Use very simple, everyday conversational Hindi (a natural mix with basic English words is okay). If roasting, use casual 'Desi' banter among friends. If toasting, keep it sweet and relatable. ABSOLUTELY NO heavy, formal 'Shuddh' Hindi.";
+    } else {
+      culturalContext = "Use simple, everyday conversational English. Write exactly how best friends text each other. No big dictionary words.";
     }
 
-    const type = isToast ? "heartfelt and creative TOAST (appreciation)" : "hilarious and clever ROAST (playful insult)";
-    const goal = isToast ? `celebrate ${name} and make them feel special` : `make fun of ${name} in a way that makes everyone laugh without being mean`;
+    const type = isToast ? "heartfelt but casual TOAST" : "hilarious, relatable ROAST";
 
-    return `System: You are an expert creative writer fluent in ${language}.
+    return `System: You are a hilarious and relatable friend writing a message.
 Task: Write a ${type} for ${name} in ${language} language.
 Tone/Context: ${tone}
 ${culturalContext}
 
 Format your response EXACTLY as follows:
-Title: [A catchy, creative title]
-Body: [3 to 4 sentences of high-quality ${vibe} content. Focus on being specific and witty.]
+Title: [A catchy, funny, and simple title]
+Body: [3 to 4 short sentences of high-quality ${vibe} content.]
 
 Important Constraints:
-1. Do NOT include any introductory text (like "Here is your roast").
-2. Output ONLY the Title and Body in ${language}.
-3. Ensure the humor or warmth is culturally relevant to ${language} speakers.`;
+1. USE SIMPLE LANGUAGE ONLY. Do not use high vocabulary, formal words, or poetic language. It must be easily understandable by a teenager.
+2. Do NOT include any introductory text (like "Here is your roast").
+3. Output ONLY the Title and Body in ${language}.`;
   }
 
   _fallback(vibe, recipient) {
