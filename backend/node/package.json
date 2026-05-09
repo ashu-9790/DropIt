@@ -1,7 +1,7 @@
 {
-  "name": "roastor-toast-backend",
+  "name": "drop-it-backend",
   "version": "1.0.0",
-  "description": "Roast or Toast backend (Node.js) — Express + Mongo + Gemini scaffold",
+  "description": "DropIt backend (Node.js) — Express + Mongo + OpenRouter AI scaffold",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",

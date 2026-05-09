@@ -1,32 +1,57 @@
-# Roast or Toast — Node.js backend
+# DropIt Backend
 
-Quick scaffold providing the same API as the previous Flask backend.
+Node.js backend for DropIt - Express + MongoDB + OpenRouter AI
 
-Setup
+## Deployment on Render
 
-1. Copy `.env.example` -> `.env` and fill `GEMINI_API_KEY` and `MONGO_URI`.
-2. Install dependencies:
+### Prerequisites
+- MongoDB Atlas account (or other MongoDB hosting)
+- OpenRouter API key
+
+### Environment Variables Required
+- `NODE_ENV=production`
+- `MONGO_URI` - Your MongoDB connection string
+- `MONGO_DB=dropit`
+- `OPENROUTER_API_KEY` - Your OpenRouter API key
+- `OPENROUTER_MODEL=openai/gpt-4o`
+- `CORS_ORIGINS=https://dropitt.me,https://www.dropitt.me`
+
+### Deploy Steps
+1. Go to https://render.com/
+2. Sign in with GitHub
+3. Click "New +" → "Web Service"
+4. Connect your GitHub repository
+5. Configure:
+   - **Name:** drop-it-backend
+   - **Root Directory:** backend/node
+   - **Environment:** Node
+   - **Build Command:** npm install
+   - **Start Command:** node src/app.js
+6. Add environment variables
+7. Click "Create Web Service"
+
+### Custom Domain
+After deployment, add custom domain `api.dropitt.me` in Render dashboard.
+
+## Local Development
 
 ```bash
 cd backend/node
 npm install
-```
-
-3. Start:
-
-```bash
-npm start
-# or for development with automatic reload
+cp .env.example .env
+# Edit .env with your credentials
 npm run dev
 ```
 
-API
+## API Endpoints
 
-- `GET /api/health` — health check
-- `POST /api/generate` — body: { vibe, recipient, language, tone }
-- `GET /api/message/:share_id` — retrieve saved message
+- `GET /api/health` - Health check
+- `POST /api/generate` - Generate message (body: { vibe, recipient, language, tone })
+- `GET /api/message/:share_id` - Get message
+- `POST /api/message/:share_id/share` - Record share
+- `GET /api/stats` - Get stats
 
-Notes
+## Notes
 
-- The Gemini HTTP endpoint is configurable via `GEMINI_ENDPOINT`.
-- If Gemini fails or is not configured, the service returns a deterministic fallback message and records `generation.source: "fallback"` and `generation.model: "template"`.
+- If OpenRouter fails or is not configured, the service returns a deterministic fallback message
+- Fallback messages are recorded with `generation.source: "fallback"` and `generation.model: "template"`

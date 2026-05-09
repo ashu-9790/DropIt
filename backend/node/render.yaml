@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: dropit-backend
+    name: drop-it-backend
     env: node
     region: oregon
     plan: free
@@ -20,7 +20,7 @@ services:
       - key: OPENROUTER_MODEL
         value: openai/gpt-4o
       - key: CORS_ORIGINS
-        value: https://dropit.me
+        value: https://dropitt.me,https://www.dropitt.me
       - key: RATE_LIMIT_WINDOW_MS
         value: 900000
       - key: RATE_LIMIT_MAX_REQUESTS
