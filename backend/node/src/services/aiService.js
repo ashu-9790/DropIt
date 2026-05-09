@@ -8,94 +8,100 @@ class AIService {
     this.model = this.cfg.OPENROUTER_MODEL;
   }
 
-  async generate({
-    vibe = "Roast",
-    recipient = "",
-    language = "English",
-    tone = "funny",
-  } = {}) {
-    const prompt = this._buildPrompt({ vibe, recipient, language, tone });
-    
+  async generate(
+    {
+      vibe = "Roast",
+      recipient = "",
+      language = "English",
+      tone = "funny",
+    } = {},
+    retry = 0
+  ) {
+    const prompt = this._buildPrompt({
+      vibe,
+      recipient,
+      language,
+      tone,
+    });
+
     if (!this.apiKey) {
-      logger.info("OpenRouter API key not configured — using fallback");
-      return this._fallback(vibe, recipient);
+      logger.info("OpenRouter API key missing — using fallback");
+      return this._fallback(vibe, recipient, language);
     }
 
     try {
-      const url = "https://openrouter.ai/api/v1/chat/completions";
-      const body = this._makeRequestBody(prompt);
-
-      // Create abort controller for timeout
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), this.cfg.REQUEST_TIMEOUT_MS);
+      const timeoutId = setTimeout(
+        () => controller.abort(),
+        this.cfg.REQUEST_TIMEOUT_MS
+      );
 
-      try {
-        const res = await fetch(url, {
+      const res = await fetch(
+        "https://openrouter.ai/api/v1/chat/completions",
+        {
           method: "POST",
           headers: {
-            "Authorization": `Bearer ${this.apiKey}`,
+            Authorization: `Bearer ${this.apiKey}`,
             "Content-Type": "application/json",
             "HTTP-Referer": "https://dropit.me",
-            "X-Title": "DropIt"
+            "X-Title": "DropIt",
           },
-          body: JSON.stringify(body),
+          body: JSON.stringify(this._makeRequestBody(prompt)),
           signal: controller.signal,
-        });
-
-        clearTimeout(timeoutId);
-
-        const text = await res.text();
-        if (!res.ok) {
-          logger.error(
-            `OpenRouter HTTP ${res.status} ${res.statusText} - response: ${text.substring(0, 200)}`
-          );
-          return this._fallback(vibe, recipient);
         }
+      );
 
-        // Log raw response for debugging
-        logger.debug(`OpenRouter raw response: ${text.substring(0, 500)}`);
+      clearTimeout(timeoutId);
 
-        let parsed = null;
-        try {
-          parsed = JSON.parse(text);
-        } catch (e) {
-          logger.error("Failed to parse OpenRouter response as JSON");
-          return this._fallback(vibe, recipient);
-        }
+      const text = await res.text();
 
-        if (parsed && parsed.choices && parsed.choices[0]) {
-          const content = parsed.choices[0].message?.content || "";
-          const candidate = this._parseTitleAndBody(content);
-          
-          if (candidate && candidate.title && candidate.body) {
-            logger.info(
-              `OpenRouter success: model="${this.model}" title="${candidate.title}" body="${candidate.body.substring(0, 100)}${candidate.body.length > 100 ? '...' : ''}"`
-            );
-            return {
-              title: candidate.title,
-              body: candidate.body,
-              source: "openrouter",
-              model: this.model,
-            };
-          }
-        }
-
-        logger.warn(
-          `OpenRouter returned unrecognized response; falling back to template. Response: ${text.substring(0, 200)}`
+      if (!res.ok) {
+        logger.error(
+          `OpenRouter HTTP ${res.status}: ${text.substring(0, 200)}`
         );
-        return this._fallback(vibe, recipient);
-      } catch (err) {
-        clearTimeout(timeoutId);
-        if (err.name === "AbortError") {
-          logger.error(`OpenRouter request timeout after ${this.cfg.REQUEST_TIMEOUT_MS}ms`);
-        } else {
-          logger.error("OpenRouter request failed: " + (err && err.message));
-        }
-        return this._fallback(vibe, recipient);
+        return this._fallback(vibe, recipient, language);
       }
+
+      logger.debug("Raw AI response: " + text.substring(0, 500));
+
+      let parsed;
+      try {
+        parsed = JSON.parse(text);
+      } catch {
+        logger.error("Invalid JSON from OpenRouter");
+        return this._fallback(vibe, recipient, language);
+      }
+
+      const content = parsed?.choices?.[0]?.message?.content || "";
+
+      const result = this._parseTitleAndBody(content);
+
+      if (result?.title && result?.body) {
+        return {
+          title: result.title,
+          body: result.body,
+          source: "openrouter",
+          model: this.model,
+        };
+      }
+
+      if (retry < 1) {
+        logger.warn("Bad AI format. Retrying once...");
+        return this.generate(
+          {
+            vibe,
+            recipient,
+            language,
+            tone,
+          },
+          retry + 1
+        );
+      }
+
+      return this._fallback(vibe, recipient, language);
     } catch (err) {
-      logger.error("OpenRouter service error: " + (err && err.message));
-      return this._fallback(vibe, recipient);
+      logger.error(err.message);
+      return this._fallback(vibe, recipient, language);
     }
   }
 
@@ -104,134 +110,193 @@ class AIService {
       model: this.model,
       messages: [
         {
+          role: "system",
+          content: `
+You are an expert writer for funny roasts and heartfelt toasts.
+
+Rules:
+1. Use VERY SIMPLE language.
+2. No difficult words.
+3. Sound like close friends talking.
+4. Hindi should be casual spoken Hindi.
+5. Marathi should be casual spoken Marathi.
+6. Roast should be funny, playful, and relatable.
+7. Toast should feel warm and genuine.
+8. Minimum 4 complete sentences.
+9. Output ONLY this format:
+
+Title: ...
+Body: ...
+`,
+        },
+        {
           role: "user",
-          content: prompt
-        }
+          content: prompt,
+        },
       ],
-      temperature: 0.6,
-      max_tokens: 2500,
+      temperature: 0.9,
+      top_p: 0.95,
+      frequency_penalty: 0.3,
+      presence_penalty: 0.3,
+      max_tokens: 700,
     };
+  }
+
+  _buildPrompt({ vibe, recipient, language, tone }) {
+    const name = recipient || "someone";
+    const isToast = vibe.toLowerCase().includes("toast");
+
+    let languageRule = "";
+
+    if (language.toLowerCase() === "marathi") {
+      languageRule = `
+Write in very simple spoken Marathi.
+Use everyday Marathi people actually speak.
+Use friendly "tomne" for roast.
+Avoid formal Marathi completely.
+`;
+    } else if (language.toLowerCase() === "hindi") {
+      languageRule = `
+Write in simple spoken Hindi.
+Use desi casual Hindi.
+Mix basic English words naturally if needed.
+Avoid shuddh Hindi.
+`;
+    } else {
+      languageRule = `
+Write in simple English.
+No difficult vocabulary.
+`;
+    }
+
+    if (isToast) {
+      return `
+Write a heartfelt casual toast for ${name}.
+
+${languageRule}
+
+Tone: ${tone}
+
+Examples:
+
+Title: Cheers to Rahul 🥂
+Body: Rahul is the kind of person who makes every day better. Being around him always feels easy and fun. He brings good energy wherever he goes. Hope life gives him all the happiness he deserves.
+`;
+    }
+
+    return `
+Write a funny roast for ${name}.
+
+${languageRule}
+
+Tone: ${tone}
+
+Requirements:
+- funny
+- playful
+- relatable
+- like friends teasing
+- not offensive
+- minimum 4 sentences
+
+Examples:
+
+Title: Rahul: Walking Confusion 😂
+Body: Rahul can make even simple things look difficult. His confidence is much higher than his actual skills. Somehow he still manages to survive every day. Honestly, that itself deserves respect.
+`;
   }
 
   _parseTitleAndBody(text) {
     if (!text) return null;
-    
-    const normalized = text.trim();
 
-    // Try to match Title: and Body: format
-    const titleMatch = normalized.match(/(?:^|\n)\s*title\s*:\s*(.+?)(?=\n|$)/i);
-    const bodyMatch = normalized.match(/(?:^|\n)\s*body\s*:\s*([\s\S]+?)(?=\n\n|$)/i);
+    const cleaned = text.trim();
+
+    const titleMatch = cleaned.match(
+      /(?:^|\n)\s*\**title\**\s*:\s*(.+?)(?=\n|$)/i
+    );
+
+    const bodyMatch = cleaned.match(
+      /(?:^|\n)\s*\**body\**\s*:\s*([\s\S]+)/i
+    );
 
     if (titleMatch && bodyMatch) {
-      let title = titleMatch[1].trim();
-      let body = bodyMatch[1].trim();
-      
-      // Clean up quotes and extra formatting
-      title = title.replace(/^["'`]+|["'`]+$/g, "").trim();
-      body = body.replace(/^["'`]+|["'`]+$/g, "").trim();
-      
-      // If body is empty or too short, try to get everything after "Body:"
-      if (!body || body.length < 10) {
-        const bodyIndex = normalized.toLowerCase().indexOf('body:');
-        if (bodyIndex !== -1) {
-          body = normalized.substring(bodyIndex + 5).trim();
-          body = body.replace(/^["'`]+|["'`]+$/g, "").trim();
-        }
-      }
-
-      if (title && body) {
-        return { title, body };
-      }
+      return {
+        title: titleMatch[1]
+          .trim()
+          .replace(/^["'`]+|["'`]+$/g, ""),
+        body: bodyMatch[1]
+          .trim()
+          .replace(/^["'`]+|["'`]+$/g, ""),
+      };
     }
 
-    // Fallback: split by first line break
-    const lines = normalized.split(/\n+/).filter(l => l.trim());
+    const lines = cleaned.split("\n").filter(Boolean);
+
     if (lines.length >= 2) {
       return {
-        title: lines[0].replace(/^["'`]+|["'`]+$/g, "").trim(),
-        body: lines.slice(1).join("\n").replace(/^["'`]+|["'`]+$/g, "").trim()
+        title: lines[0],
+        body: lines.slice(1).join(" "),
       };
     }
 
     return null;
   }
 
-  _buildPrompt({ vibe, recipient, language, tone }) {
-    const name = recipient || "someone";
-    const isToast = vibe && vibe.toLowerCase().includes("toast");
-
-    // Cultural instruction forcing simple, everyday language without mentioning specific apps
-    let culturalContext = "";
-    if (language.toLowerCase() === "marathi") {
-      culturalContext = "Use extremely simple, everyday conversational Marathi. If roasting, use funny, relatable 'tomne' (taunts) that friends use with each other. If toasting, be warm but keep it casual. ABSOLUTELY NO formal, bookish, or heavy Marathi words.";
-    } else if (language.toLowerCase() === "hindi") {
-      culturalContext = "Use very simple, everyday conversational Hindi (a natural mix with basic English words is fine). If roasting, use casual 'Desi' banter among friends. If toasting, keep it sweet and relatable. ABSOLUTELY NO heavy, formal 'Shuddh' Hindi.";
-    } else {
-      culturalContext = "Use simple, everyday conversational English. Write exactly how best friends talk to each other in real life. No big dictionary words.";
-    }
-
-    const type = isToast ? "heartfelt but casual TOAST" : "hilarious, relatable ROAST";
-
-    return `System: You are a hilarious and relatable friend writing a short, direct note.
-Task: Write a ${type} for ${name} in ${language} language.
-Tone/Context: ${tone}
-${culturalContext}
-
-Format your response EXACTLY as follows:
-Title: [A catchy, funny, and simple title]
-Body: [3 to 4 short sentences of high-quality ${vibe} content.]
-
-Important Constraints:
-1. USE SIMPLE LANGUAGE ONLY. Do not use high vocabulary, formal words, or poetic language. It must be easily understandable by a teenager.
-2. DO NOT mention the words "WhatsApp", "text message", "message", or "app" anywhere in the title or body. Just write the actual roast/toast directly.
-3. Do NOT include any introductory text (like "Here is your roast").
-4. Output ONLY the Title and Body in ${language}.`;
-  }
-
-  _fallback(vibe, recipient) {
+  _fallback(vibe, recipient, language) {
     const name = recipient || "you";
-    
-    if (vibe === "Toast") {
-      const toasts = [
-        {
-          title: `Here's to ${name}! 🥂`,
-          body: `${name} is proof that awesome people exist. May your coffee be strong, your WiFi be fast, and your Monday mornings be tolerable. Cheers to being absolutely legendary! 🌟`
-        },
-        {
-          title: `A Toast to ${name}'s Greatness`,
-          body: `They say legends are born, not made. Well, ${name} is living proof. Here's to someone who makes the world brighter just by existing. Keep being amazing! 🎉`
-        },
-        {
-          title: `Celebrating ${name} Today! 🎊`,
-          body: `If ${name} was a superhero, their power would be making everyone around them better. Here's to the person who turns ordinary days into extraordinary memories! 🦸`
-        }
-      ];
-      const toast = toasts[Math.floor(Math.random() * toasts.length)];
-      logger.info(`Using fallback toast template: title="${toast.title}" body="${toast.body}"`);
-      return { ...toast, source: "fallback", model: "template" };
-    } else {
-      const roasts = [
-        {
-          title: `${name}: A Walking Meme 🔥`,
-          body: `${name} walks into a room and the WiFi apologizes for buffering. Even autocorrect gives up trying to fix their texts. But hey, at least they're consistently entertaining! 😂`
-        },
-        {
-          title: `Roasting ${name} (Gently) 🌶️`,
-          body: `${name}'s idea of multitasking is messing up several things at once. They're like a software update – nobody asked for them, but here they are anyway. Still love 'em though! 💀`
-        },
-        {
-          title: `${name}: The Legend (in Their Own Mind)`,
-          body: `${name} has the confidence of a toddler with a permanent marker. They're proof that you don't need talent when you have audacity. Respect the hustle! 🎭`
-        },
-        {
-          title: `Breaking News: ${name} Exists! 📰`,
-          body: `Scientists are still trying to figure out how ${name} functions on a daily basis. They're like a mystery wrapped in an enigma, covered in confusion. Truly one of a kind! 🤔`
-        }
-      ];
-      const roast = roasts[Math.floor(Math.random() * roasts.length)];
-      logger.info(`Using fallback roast template: title="${roast.title}" body="${roast.body}"`);
-      return { ...roast, source: "fallback", model: "template" };
+    const isToast = vibe.toLowerCase().includes("toast");
+
+    if (language.toLowerCase() === "marathi") {
+      if (isToast) {
+        return {
+          title: `${name} साठी खास 🥂`,
+          body: `${name} खरंच खूप छान व्यक्ती आहे. त्याच्या आसपास असलं की वातावरणच चांगलं होतं. नेहमी असाच आनंदी राहा. आयुष्यात खूप यश मिळो.`,
+          source: "fallback",
+          model: "template",
+        };
+      }
+
+      return {
+        title: `${name} म्हणजे वेगळाच नमुना 😂`,
+        body: `${name} साधं काम पण अवघड करून दाखवतो. आत्मविश्वास मात्र भन्नाट आहे. कसं काय manage करतो देव जाणे. पण entertainment full आहे.`,
+        source: "fallback",
+        model: "template",
+      };
     }
+
+    if (language.toLowerCase() === "hindi") {
+      if (isToast) {
+        return {
+          title: `${name} के नाम 🥂`,
+          body: `${name} सच में बहुत अच्छे इंसान हैं. इनके साथ समय अच्छा निकलता है. हमेशा ऐसे ही खुश रहो. जिंदगी में बहुत आगे बढ़ो.`,
+          source: "fallback",
+          model: "template",
+        };
+      }
+
+      return {
+        title: `${name} अलग ही level पर है 😂`,
+        body: `${name} आसान चीज़ भी मुश्किल बना देता है. confidence पूरा आसमान पर है. कैसे manage करता है पता नहीं. लेकिन entertaining ज़रूर है.`,
+        source: "fallback",
+        model: "template",
+      };
+    }
+
+    if (isToast) {
+      return {
+        title: `Cheers to ${name} 🥂`,
+        body: `${name} truly makes life better for everyone around. Being with them always feels fun and easy. Hope happiness always stays with them. They deserve the best.`,
+        source: "fallback",
+        model: "template",
+      };
+    }
+
+    return {
+      title: `${name}: Pure Chaos 😂`,
+      body: `${name} can make simple things look complicated. Confidence is never the problem. Somehow they still survive every day. Honestly, that's impressive.`,
+      source: "fallback",
+      model: "template",
+    };
   }
 }
 
