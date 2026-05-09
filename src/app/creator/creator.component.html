@@ -12,7 +12,6 @@
             </div>
 
             <div class="rounded-[2rem] border-2 border-black/20 bg-[#fefdf5]/90 px-6 py-8 shadow-[12px_12px_0_rgba(17,17,17,0.08)] sm:px-10 sm:py-10">
-                @if (!isEditing) {
                 <!-- Preview Mode -->
                 <div class="space-y-8">
                     <div class="flex items-center justify-center gap-2">
@@ -31,11 +30,6 @@
 
                     <div class="flex flex-col gap-3 pt-4 sm:flex-row sm:justify-center">
                         <button type="button"
-                            class="border border-black bg-transparent px-6 py-3 font-mono text-[0.65rem] uppercase tracking-[0.28em] text-black transition duration-200 hover:-translate-y-0.5 hover:bg-black hover:text-paper"
-                            (click)="enableEdit()">
-                            ✏️ Edit Message
-                        </button>
-                        <button type="button"
                             class="border border-black bg-black px-6 py-3 font-mono text-[0.65rem] uppercase tracking-[0.28em] text-paper transition duration-200 hover:-translate-y-0.5 hover:bg-transparent hover:text-black"
                             (click)="approveAndShare()">
                             ✓ Looks Good, Share It!
@@ -48,37 +42,6 @@
                         ↻ Generate Again
                     </button>
                 </div>
-                } @else {
-                <!-- Edit Mode -->
-                <form [formGroup]="editForm" (ngSubmit)="saveEdit()" class="space-y-6">
-                    <div class="space-y-2 text-left">
-                        <label class="block font-mono text-[0.6rem] uppercase tracking-[0.24em] text-black/55">Title</label>
-                        <input type="text" formControlName="title"
-                            class="w-full border border-black/25 bg-paper/70 px-4 py-3 font-heading text-lg outline-none transition focus:border-black focus:bg-white/70"
-                            placeholder="Message title" />
-                    </div>
-
-                    <div class="space-y-2 text-left">
-                        <label class="block font-mono text-[0.6rem] uppercase tracking-[0.24em] text-black/55">Body</label>
-                        <textarea rows="8" formControlName="body"
-                            class="w-full resize-y border border-black/25 bg-paper/70 px-4 py-3 font-body text-base leading-relaxed outline-none transition focus:border-black focus:bg-white/70"
-                            placeholder="Message content"></textarea>
-                    </div>
-
-                    <div class="flex flex-col gap-3 sm:flex-row sm:justify-center">
-                        <button type="button"
-                            class="border border-black bg-transparent px-6 py-3 font-mono text-[0.65rem] uppercase tracking-[0.28em] text-black transition duration-200 hover:-translate-y-0.5 hover:bg-black/5"
-                            (click)="cancelEdit()">
-                            Cancel
-                        </button>
-                        <button type="submit"
-                            class="border border-black bg-black px-6 py-3 font-mono text-[0.65rem] uppercase tracking-[0.28em] text-paper transition duration-200 hover:-translate-y-0.5 hover:bg-transparent hover:text-black"
-                            [disabled]="editForm.invalid">
-                            Save Changes
-                        </button>
-                    </div>
-                </form>
-                }
             </div>
         </div>
         }

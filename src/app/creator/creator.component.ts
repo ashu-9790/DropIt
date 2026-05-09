@@ -43,11 +43,10 @@ export class CreatorComponent {
   protected shareUrl = '';
   protected errorMessage = '';
   
-  // New preview/edit features
+  // Preview features
   protected showPreview = false;
   protected previewTitle = '';
   protected previewBody = '';
-  protected isEditing = false;
   protected generatedShareId = '';
   protected showSocialShare = false;
 
@@ -59,11 +58,6 @@ export class CreatorComponent {
       'English',
       Validators.required,
     ),
-  });
-  
-  readonly editForm = this.fb.nonNullable.group({
-    title: ['', [Validators.required, Validators.maxLength(200)]],
-    body: ['', [Validators.required, Validators.maxLength(1000)]],
   });
 
   beginDraft(vibe: Vibe): void {
@@ -142,10 +136,6 @@ export class CreatorComponent {
             if (msgResponse.success && msgResponse.data.content) {
               this.previewTitle = msgResponse.data.content.title;
               this.previewBody = msgResponse.data.content.body;
-              this.editForm.patchValue({
-                title: this.previewTitle,
-                body: this.previewBody,
-              });
               console.log('Setting showPreview = true');
               this.showPreview = true;
               this.formVisible = false;
@@ -167,26 +157,6 @@ export class CreatorComponent {
         this.usePreviewShareLink();
       },
     });
-  }
-  
-  enableEdit(): void {
-    this.isEditing = true;
-  }
-  
-  cancelEdit(): void {
-    this.isEditing = false;
-    this.editForm.patchValue({
-      title: this.previewTitle,
-      body: this.previewBody,
-    });
-  }
-  
-  saveEdit(): void {
-    if (this.editForm.invalid) return;
-    
-    this.previewTitle = this.editForm.controls.title.value.trim();
-    this.previewBody = this.editForm.controls.body.value.trim();
-    this.isEditing = false;
   }
   
   approveAndShare(): void {
