@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "name": "dropit",
+  "name": "drop-it",
   "builds": [
     {
       "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "dist/roastor-toast/browser"
+        "distDir": "dist/drop-it/browser"
       }
     }
   ],
