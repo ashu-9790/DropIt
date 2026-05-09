@@ -25,6 +25,11 @@ function getApiBaseUrl(): string {
       return `${protocol}//localhost:5000`;
     }
 
+    // Production: use api subdomain
+    if (hostname === 'dropitt.me' || hostname === 'www.dropitt.me') {
+      return 'https://api.dropitt.me';
+    }
+
     // Otherwise, use same origin
     return `${protocol}//${hostname}${port ? ':' + port : ''}`;
   }
