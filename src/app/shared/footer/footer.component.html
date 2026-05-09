@@ -1,0 +1,63 @@
+<footer class="border-t border-black/10 bg-paper/50 py-12">
+  <div class="mx-auto max-w-6xl px-6">
+    <div class="grid gap-8 md:grid-cols-3">
+      <!-- Brand Section -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-3">
+          <svg viewBox="0 0 40 40" class="h-10 w-10" aria-hidden="true">
+            <circle cx="20" cy="20" r="18" fill="#f6a6b7" stroke="#23150f" stroke-width="2"/>
+            <path d="M20 8 L28 16 L24 20 L28 24 L20 32 L12 24 L16 20 L12 16 Z" fill="#23150f"/>
+          </svg>
+          <span class="font-script text-3xl font-bold">DropIt</span>
+        </div>
+        <p class="font-mono text-xs uppercase tracking-wider text-black/60">
+          Drop vibes, spark reactions
+        </p>
+      </div>
+
+      <!-- Links Section -->
+      <div class="space-y-4">
+        <h3 class="font-mono text-xs font-semibold uppercase tracking-widest text-black/70">Legal</h3>
+        <ul class="space-y-2 font-body text-sm">
+          <li>
+            <a routerLink="/terms" class="text-black/70 transition hover:text-black hover:underline">
+              Terms & Conditions
+            </a>
+          </li>
+          <li>
+            <a routerLink="/privacy" class="text-black/70 transition hover:text-black hover:underline">
+              Privacy Policy
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Contact Section -->
+      <div class="space-y-4">
+        <h3 class="font-mono text-xs font-semibold uppercase tracking-widest text-black/70">Contact</h3>
+        <ul class="space-y-2 font-body text-sm">
+          <li>
+            <a href="mailto:support@dropit.me" class="text-black/70 transition hover:text-black hover:underline">
+              support&#64;dropit.me
+            </a>
+          </li>
+          <li>
+            <a href="mailto:hello@dropit.me" class="text-black/70 transition hover:text-black hover:underline">
+              hello&#64;dropit.me
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Copyright -->
+    <div class="mt-12 border-t border-black/10 pt-8 text-center">
+      <p class="font-mono text-xs tracking-wider text-black/50">
+        © {{ currentYear }} DropIt. All rights reserved.
+      </p>
+      <p class="mt-2 font-mono text-xs tracking-wider text-black/40">
+        Made with ❤️ for spreading joy and laughter
+      </p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,97 @@
+<header class="sticky top-0 z-50 border-b border-black/10 bg-paper/95 backdrop-blur-sm">
+  <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+    <!-- Logo & Brand -->
+    <a routerLink="/" class="group flex items-center gap-3 transition hover:opacity-80">
+      <svg viewBox="0 0 40 40" class="h-10 w-10 transition-transform group-hover:scale-110 group-hover:-rotate-12" aria-hidden="true">
+        <defs>
+          <radialGradient id="dropGradientNav" cx="50%" cy="30%" r="70%">
+            <stop offset="0%" stop-color="#ffd4e5" />
+            <stop offset="50%" stop-color="#f6a6b7" />
+            <stop offset="100%" stop-color="#e85d75" />
+          </radialGradient>
+        </defs>
+        <path d="M20 5 C20 5, 10 15, 10 22 C10 27, 14 30, 20 30 C26 30, 30 27, 30 22 C30 15, 20 5, 20 5 Z" 
+              fill="url(#dropGradientNav)" 
+              stroke="#23150f" 
+              stroke-width="2"/>
+        <ellipse cx="16" cy="15" rx="3" ry="4" fill="#ffffff" opacity="0.4"/>
+      </svg>
+      <div class="flex flex-col">
+        <span class="font-script text-2xl font-bold leading-none">DropIt</span>
+        <span class="font-mono text-[0.5rem] uppercase tracking-[0.2em] text-black/50">Drop vibes, spark reactions</span>
+      </div>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <div class="hidden items-center gap-6 md:flex">
+      <a routerLink="/" 
+         routerLinkActive="text-black font-semibold"
+         [routerLinkActiveOptions]="{exact: true}"
+         class="font-mono text-xs uppercase tracking-widest text-black/60 transition hover:text-black">
+        Home
+      </a>
+      <a routerLink="/terms" 
+         routerLinkActive="text-black font-semibold"
+         class="font-mono text-xs uppercase tracking-widest text-black/60 transition hover:text-black">
+        Terms
+      </a>
+      <a routerLink="/privacy" 
+         routerLinkActive="text-black font-semibold"
+         class="font-mono text-xs uppercase tracking-widest text-black/60 transition hover:text-black">
+        Privacy
+      </a>
+      <a href="mailto:hello@dropit.me"
+         class="rounded-full border border-black bg-black px-5 py-2 font-mono text-xs uppercase tracking-widest text-paper transition hover:bg-transparent hover:text-black">
+        Contact
+      </a>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <button 
+      type="button"
+      (click)="toggleMenu()"
+      class="flex flex-col gap-1.5 md:hidden"
+      [attr.aria-expanded]="isMenuOpen"
+      aria-label="Toggle menu">
+      <span class="h-0.5 w-6 bg-black transition-all" 
+            [class.rotate-45]="isMenuOpen" 
+            [class.translate-y-2]="isMenuOpen"></span>
+      <span class="h-0.5 w-6 bg-black transition-all" 
+            [class.opacity-0]="isMenuOpen"></span>
+      <span class="h-0.5 w-6 bg-black transition-all" 
+            [class.-rotate-45]="isMenuOpen" 
+            [class.-translate-y-2]="isMenuOpen"></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  @if (isMenuOpen) {
+  <div class="border-t border-black/10 bg-paper/98 px-6 py-6 md:hidden" @slideDown>
+    <div class="flex flex-col gap-4">
+      <a routerLink="/" 
+         (click)="closeMenu()"
+         routerLinkActive="text-black font-semibold"
+         [routerLinkActiveOptions]="{exact: true}"
+         class="font-mono text-sm uppercase tracking-widest text-black/60 transition hover:text-black">
+        Home
+      </a>
+      <a routerLink="/terms" 
+         (click)="closeMenu()"
+         routerLinkActive="text-black font-semibold"
+         class="font-mono text-sm uppercase tracking-widest text-black/60 transition hover:text-black">
+        Terms & Conditions
+      </a>
+      <a routerLink="/privacy" 
+         (click)="closeMenu()"
+         routerLinkActive="text-black font-semibold"
+         class="font-mono text-sm uppercase tracking-widest text-black/60 transition hover:text-black">
+        Privacy Policy
+      </a>
+      <a href="mailto:hello@dropit.me"
+         class="mt-2 rounded-full border border-black bg-black px-5 py-3 text-center font-mono text-sm uppercase tracking-widest text-paper transition hover:bg-transparent hover:text-black">
+        Contact Us
+      </a>
+    </div>
+  </div>
+  }
+</header>

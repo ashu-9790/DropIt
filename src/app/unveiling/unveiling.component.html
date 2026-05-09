@@ -1,0 +1,327 @@
+<main class="min-h-screen bg-paper text-black relative overflow-hidden">
+
+    <!-- Confetti Animation -->
+    @if (showConfetti) {
+    <div class="fixed inset-0 pointer-events-none z-50">
+        <div class="confetti" style="left: 5%"></div>
+        <div class="confetti" style="left: 10%; animation-delay: 50ms"></div>
+        <div class="confetti" style="left: 15%; animation-delay: 100ms"></div>
+        <div class="confetti" style="left: 20%; animation-delay: 150ms"></div>
+        <div class="confetti" style="left: 25%; animation-delay: 200ms"></div>
+        <div class="confetti" style="left: 30%; animation-delay: 250ms"></div>
+        <div class="confetti" style="left: 35%; animation-delay: 300ms"></div>
+        <div class="confetti" style="left: 40%; animation-delay: 350ms"></div>
+        <div class="confetti" style="left: 45%; animation-delay: 400ms"></div>
+        <div class="confetti" style="left: 50%; animation-delay: 450ms"></div>
+        <div class="confetti" style="left: 55%; animation-delay: 500ms"></div>
+        <div class="confetti" style="left: 60%; animation-delay: 550ms"></div>
+        <div class="confetti" style="left: 65%; animation-delay: 600ms"></div>
+        <div class="confetti" style="left: 70%; animation-delay: 650ms"></div>
+        <div class="confetti" style="left: 75%; animation-delay: 700ms"></div>
+        <div class="confetti" style="left: 80%; animation-delay: 750ms"></div>
+        <div class="confetti" style="left: 85%; animation-delay: 800ms"></div>
+        <div class="confetti" style="left: 90%; animation-delay: 850ms"></div>
+        <div class="confetti" style="left: 95%; animation-delay: 900ms"></div>
+        <div class="confetti" style="left: 100%; animation-delay: 950ms"></div>
+    </div>
+    }
+
+    <section
+        class="mx-auto flex min-h-screen w-full max-w-4xl flex-col items-center justify-center px-6 py-16 text-center">
+
+        @if (loading) {
+
+        <div class="space-y-4">
+
+            <div
+                class="mx-auto h-16 w-16 animate-spin rounded-full border-4 border-black/10 border-t-black">
+            </div>
+
+            <p class="font-mono text-[0.68rem] uppercase tracking-[0.35em] text-black/55">
+                Loading the message
+            </p>
+
+            <p class="font-script font-semibold text-[3rem] leading-none sm:text-[4.5rem]">
+                Please wait.
+            </p>
+
+        </div>
+
+        } @else if (errorMessage) {
+
+        <div class="max-w-xl space-y-8">
+
+            <p class="font-mono text-[0.68rem] uppercase tracking-[0.35em] text-black/55">
+                Something went sideways
+            </p>
+
+            <p class="font-script font-semibold text-[3rem] leading-none sm:text-[4.5rem]">
+                Message unavailable.
+            </p>
+
+            <p class="font-mono text-[0.72rem] uppercase tracking-[0.2em] text-black/60">
+                {{ errorMessage }}
+            </p>
+
+            <button
+                type="button"
+                class="border border-black bg-black px-7 py-4 font-mono text-[0.68rem] uppercase tracking-[0.28em] text-paper transition duration-200 hover:-translate-y-0.5 hover:scale-105 hover:bg-transparent hover:text-black hover:shadow-lg"
+                (click)="navigateToCreate()">
+
+                Create a New Link
+
+            </button>
+
+        </div>
+
+        } @else {
+
+        <div class="w-full space-y-14 sm:space-y-16">
+
+            <!-- Header -->
+            <div class="flex flex-col items-center space-y-8">
+
+                <div
+                    class="h-24 w-24 sm:h-28 sm:w-28 transition-transform duration-500 hover:scale-110 hover:rotate-12">
+
+                    <svg viewBox="0 0 120 120" class="h-full w-full" aria-hidden="true">
+
+                        <defs>
+                            <radialGradient id="petalGlowUnveil" cx="50%" cy="45%" r="60%">
+                                <stop offset="0%" stop-color="#ffdfbf" />
+                                <stop offset="100%" stop-color="#f6a6b7" />
+                            </radialGradient>
+                        </defs>
+
+                        <ellipse cx="60" cy="60" rx="9" ry="9" fill="#f7c25a" opacity="0.98" />
+
+                        <g fill="url(#petalGlowUnveil)"
+                            stroke="#23150f"
+                            stroke-width="2.2"
+                            stroke-linejoin="round">
+
+                            <path d="M60 18c11 7 17 16 17 25-5 8-12 11-17 11s-12-3-17-11c0-9 6-18 17-25Z" />
+                            <path d="M83 27c9 9 12 19 9 28-8 5-16 5-21 2-4-4-6-11-4-21 5-6 10-9 16-9Z" />
+                            <path d="M96 51c4 12 2 22-5 29-9 1-16-3-20-8-2-6-1-13 5-21 7-3 14-3 20 0Z" />
+                            <path d="M92 79c-4 12-11 20-21 22-8-4-13-10-14-16 1-6 6-12 16-17 7 0 14 3 19 11Z" />
+                            <path d="M70 98c-10 7-20 8-29 3-4-8-4-15-1-21 5-4 12-6 22-4 6 4 9 11 8 22Z" />
+                            <path d="M41 98c-11-2-18-10-22-22 5-8 12-12 19-11 10 5 15 11 16 17-1 6-6 12-13 16Z" />
+                            <path d="M28 80c-7-7-9-17-5-29 6-3 13-3 20 0 6 8 7 15 5 21-4 5-11 9-20 8Z" />
+                            <path d="M37 27c6 0 11 3 16 9 2 10 0 17-4 21-5 3-13 3-21-2-3-9 0-19 9-28Z" />
+
+                        </g>
+
+                        <circle cx="60" cy="60" r="7" fill="#f0a034" stroke="#23150f" stroke-width="1.8" />
+
+                    </svg>
+
+                </div>
+
+                <div class="space-y-5">
+
+                    @if (!revealOpen) {
+
+                    <h1
+                        class="font-script font-bold text-[4rem] leading-[0.9] tracking-tight sm:text-[5.5rem] md:text-[7rem]">
+
+                        You&#39;ve received a {{ vibe }}!
+
+                    </h1>
+
+                    <p class="font-mono text-[0.68rem] uppercase tracking-[0.34em] text-black/60">
+                        tap once to reveal the message beneath the fold
+                    </p>
+
+                    } @else {
+
+                    <p class="font-mono text-[0.65rem] uppercase tracking-[0.34em] text-black/55">
+                        {{ vibe }}
+                    </p>
+
+                    }
+
+                </div>
+
+            </div>
+
+            <!-- Reveal Button -->
+            @if (!revealOpen) {
+
+            <button
+                type="button"
+                class="group relative overflow-hidden border border-black bg-black px-8 py-4 font-mono text-[0.68rem] uppercase tracking-[0.28em] text-paper transition duration-200 hover:-translate-y-0.5 hover:scale-105 hover:bg-transparent hover:text-black hover:shadow-lg"
+                (click)="reveal()"
+                [@fadeAway]="revealOpen">
+
+                <span class="relative z-10">
+                    🎁 Tap to Reveal
+                </span>
+
+                <div
+                    class="absolute inset-0 -z-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000">
+                </div>
+
+            </button>
+
+            }
+
+            <!-- Revealed Content -->
+            @if (revealOpen) {
+
+            <div
+                class="mx-auto max-w-3xl space-y-8"
+                [@riseIn]="revealOpen">
+
+                <!-- Message Card -->
+                <div
+                    class="rounded-[2rem] border-2 border-black/15 bg-[#fefdf5]/90 px-6 py-10 shadow-[12px_12px_0_rgba(17,17,17,0.08)] sm:px-10 sm:py-12">
+
+                    <h2
+                        class="font-heading font-bold text-[2.25rem] leading-tight sm:text-[3rem] md:text-[3.75rem] text-balance tracking-tight mb-6">
+
+                        {{ title }}
+
+                    </h2>
+
+                    <p
+                        class="mx-auto max-w-2xl font-body font-normal text-[1.125rem] leading-relaxed text-black/90 sm:text-[1.25rem] md:text-[1.375rem]">
+
+                        {{ body }}
+
+                    </p>
+
+                </div>
+
+                <!-- Emoji Reactions -->
+                <div class="space-y-4">
+                    <p class="font-mono text-[0.6rem] uppercase tracking-wider text-black/50">React with an emoji</p>
+                    <div class="flex items-center justify-center gap-3 flex-wrap">
+                        <button type="button"
+                            [class]="'group relative flex h-14 w-14 items-center justify-center rounded-full border-2 transition-all duration-200 hover:-translate-y-1 hover:scale-110 hover:shadow-lg ' + (selectedReaction === '😂' ? 'border-black bg-black/5' : 'border-black/10 bg-white/50')"
+                            (click)="reactWithEmoji('😂')">
+                            <span class="text-2xl transition-transform group-hover:scale-125">😂</span>
+                        </button>
+                        <button type="button"
+                            [class]="'group relative flex h-14 w-14 items-center justify-center rounded-full border-2 transition-all duration-200 hover:-translate-y-1 hover:scale-110 hover:shadow-lg ' + (selectedReaction === '🔥' ? 'border-black bg-black/5' : 'border-black/10 bg-white/50')"
+                            (click)="reactWithEmoji('🔥')">
+                            <span class="text-2xl transition-transform group-hover:scale-125">🔥</span>
+                        </button>
+                        <button type="button"
+                            [class]="'group relative flex h-14 w-14 items-center justify-center rounded-full border-2 transition-all duration-200 hover:-translate-y-1 hover:scale-110 hover:shadow-lg ' + (selectedReaction === '💀' ? 'border-black bg-black/5' : 'border-black/10 bg-white/50')"
+                            (click)="reactWithEmoji('💀')">
+                            <span class="text-2xl transition-transform group-hover:scale-125">💀</span>
+                        </button>
+                        <button type="button"
+                            [class]="'group relative flex h-14 w-14 items-center justify-center rounded-full border-2 transition-all duration-200 hover:-translate-y-1 hover:scale-110 hover:shadow-lg ' + (selectedReaction === '😭' ? 'border-black bg-black/5' : 'border-black/10 bg-white/50')"
+                            (click)="reactWithEmoji('😭')">
+                            <span class="text-2xl transition-transform group-hover:scale-125">😭</span>
+                        </button>
+                        <button type="button"
+                            [class]="'group relative flex h-14 w-14 items-center justify-center rounded-full border-2 transition-all duration-200 hover:-translate-y-1 hover:scale-110 hover:shadow-lg ' + (selectedReaction === '👏' ? 'border-black bg-black/5' : 'border-black/10 bg-white/50')"
+                            (click)="reactWithEmoji('👏')">
+                            <span class="text-2xl transition-transform group-hover:scale-125">👏</span>
+                        </button>
+                        <button type="button"
+                            [class]="'group relative flex h-14 w-14 items-center justify-center rounded-full border-2 transition-all duration-200 hover:-translate-y-1 hover:scale-110 hover:shadow-lg ' + (selectedReaction === '❤️' ? 'border-black bg-black/5' : 'border-black/10 bg-white/50')"
+                            (click)="reactWithEmoji('❤️')">
+                            <span class="text-2xl transition-transform group-hover:scale-125">❤️</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Display -->
+                @if (stats) {
+                <div class="flex items-center justify-center gap-12 pt-4 border-t border-black/10">
+                    <div class="text-center">
+                        <div class="font-mono text-2xl font-bold text-black">{{ stats.views || 0 }}</div>
+                        <div class="font-mono text-[0.65rem] uppercase tracking-wider text-black/55">Views</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="font-mono text-2xl font-bold text-black">{{ stats.shares || 0 }}</div>
+                        <div class="font-mono text-[0.65rem] uppercase tracking-wider text-black/55">Shares</div>
+                    </div>
+                </div>
+                }
+
+                <!-- Social Share Buttons -->
+                <div class="space-y-4 border-t border-black/10 pt-6">
+                    <p class="font-mono text-[0.6rem] uppercase tracking-wider text-black/50">Share this {{ vibe.toLowerCase() }}</p>
+                    <div class="flex items-center justify-center gap-3 flex-wrap">
+                        <!-- WhatsApp -->
+                        <button type="button"
+                            class="group flex h-12 w-12 items-center justify-center rounded-full border-2 border-black/10 bg-white/50 transition-all duration-200 hover:-translate-y-1 hover:border-[#25D366] hover:bg-[#25D366]/10 hover:shadow-lg"
+                            (click)="shareToWhatsApp()"
+                            title="Share on WhatsApp">
+                            <svg class="h-5 w-5 transition group-hover:scale-110" fill="#25D366" viewBox="0 0 24 24">
+                                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                            </svg>
+                        </button>
+
+                        <!-- Twitter -->
+                        <button type="button"
+                            class="group flex h-12 w-12 items-center justify-center rounded-full border-2 border-black/10 bg-white/50 transition-all duration-200 hover:-translate-y-1 hover:border-[#1DA1F2] hover:bg-[#1DA1F2]/10 hover:shadow-lg"
+                            (click)="shareToTwitter()"
+                            title="Share on Twitter">
+                            <svg class="h-5 w-5 transition group-hover:scale-110" fill="#1DA1F2" viewBox="0 0 24 24">
+                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                            </svg>
+                        </button>
+
+                        <!-- Instagram -->
+                        <button type="button"
+                            class="group flex h-12 w-12 items-center justify-center rounded-full border-2 border-black/10 bg-white/50 transition-all duration-200 hover:-translate-y-1 hover:border-[#E4405F] hover:bg-[#E4405F]/10 hover:shadow-lg"
+                            (click)="shareToInstagram()"
+                            title="Share on Instagram">
+                            <svg class="h-5 w-5 transition group-hover:scale-110" fill="#E4405F" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                        </button>
+
+                        <!-- Snapchat -->
+                        <button type="button"
+                            class="group flex h-12 w-12 items-center justify-center rounded-full border-2 border-black/10 bg-white/50 transition-all duration-200 hover:-translate-y-1 hover:border-[#FFFC00] hover:bg-[#FFFC00]/10 hover:shadow-lg"
+                            (click)="shareToSnapchat()"
+                            title="Share on Snapchat">
+                            <svg class="h-5 w-5 transition group-hover:scale-110" fill="#FFFC00" viewBox="0 0 24 24">
+                                <path d="M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c-.012.18-.022.345-.03.51.075.045.203.09.401.09.3-.016.659-.12 1.033-.301.165-.088.344-.104.464-.104.182 0 .359.029.509.09.45.149.734.479.734.838.015.449-.39.839-1.213 1.168-.089.029-.209.075-.344.119-.45.135-1.139.36-1.333.81-.09.224-.061.524.12.868l.015.015c.06.136 1.526 3.475 4.791 4.014.255.044.435.27.42.509 0 .075-.015.149-.045.225-.24.569-1.273.988-3.146 1.271-.059.091-.12.375-.164.57-.029.179-.074.36-.134.553-.076.271-.27.405-.555.405h-.03c-.135 0-.313-.031-.538-.074-.36-.075-.765-.135-1.273-.135-.3 0-.599.015-.913.074-.6.104-1.123.464-1.723.884-.853.599-1.826 1.288-3.294 1.288-.06 0-.119-.015-.18-.015h-.149c-1.468 0-2.427-.675-3.279-1.288-.599-.42-1.107-.779-1.707-.884-.314-.045-.629-.074-.928-.074-.54 0-.958.089-1.272.149-.211.043-.391.074-.54.074-.374 0-.523-.224-.583-.42-.061-.192-.09-.389-.135-.567-.046-.181-.105-.494-.166-.57-1.918-.222-2.95-.642-3.189-1.226-.031-.063-.052-.15-.055-.225-.015-.243.165-.465.42-.509 3.264-.54 4.73-3.879 4.791-4.02l.016-.029c.18-.345.224-.645.119-.869-.195-.434-.884-.658-1.332-.809-.121-.029-.24-.074-.346-.119-1.107-.435-1.257-.93-1.197-1.273.09-.479.674-.793 1.168-.793.146 0 .27.029.383.074.42.194.789.3 1.104.3.234 0 .384-.06.465-.105l-.046-.569c-.098-1.626-.225-3.651.307-4.837C7.392 1.077 10.739.807 11.727.807l.419-.015h.06z"/>
+                            </svg>
+                        </button>
+
+                        <!-- Copy Link -->
+                        <button type="button"
+                            class="group flex h-12 w-12 items-center justify-center rounded-full border-2 border-black/10 bg-white/50 transition-all duration-200 hover:-translate-y-1 hover:border-black hover:bg-black/5 hover:shadow-lg"
+                            (click)="copyLink()"
+                            title="Copy link">
+                            @if (copyStatus === 'copied') {
+                            <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            } @else {
+                            <svg class="h-5 w-5 text-black/70 transition group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                            </svg>
+                            }
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Make Another Button -->
+                <div class="flex flex-col sm:flex-row gap-3 pt-4 justify-center">
+                    <button type="button"
+                        class="border border-black bg-transparent px-7 py-4 font-mono text-[0.68rem] uppercase tracking-[0.28em] text-black transition duration-200 hover:-translate-y-0.5 hover:scale-105 hover:bg-black hover:text-paper hover:shadow-lg"
+                        (click)="navigateToCreate()">
+                        ✨ Make Another
+                    </button>
+                </div>
+
+            </div>
+
+            }
+
+        </div>
+
+        }
+
+    </section>
+
+</main>

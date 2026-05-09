@@ -1,1 +1,98 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Serif+Devanagari:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--font-script: "Playfair Display", "Georgia", serif;
+	--font-mono: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	--font-heading: "Playfair Display", "Noto Serif Devanagari", Georgia, serif;
+	--font-body: "Inter", "Noto Sans Devanagari", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+html,
+body {
+	height: 100%;
+	background: #f9f9ee;
+	scroll-behavior: smooth;
+}
+
+body {
+	margin: 0;
+	background: #f9f9ee;
+	color: #111111;
+	font-family: var(--font-mono);
+	text-rendering: geometricPrecision;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+app-root {
+	display: block;
+	min-height: 100%;
+	background: #f9f9ee;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+::selection {
+	background: #111111;
+	color: #f9f9ee;
+}
+
+/* Smooth transitions for interactive elements */
+button, a, input, textarea, select {
+	transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Focus styles for accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+	outline: 2px solid #111111;
+	outline-offset: 2px;
+}
+
+/* Smooth page transitions */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* Loading spinner */
+@keyframes spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/* Pulse animation for interactive elements */
+@keyframes pulse {
+	0%, 100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+	0% {
+		background-position: -1000px 0;
+	}
+	100% {
+		background-position: 1000px 0;
+	}
+}
