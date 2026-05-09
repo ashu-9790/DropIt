@@ -5,6 +5,7 @@ const logger = require("./logger");
 const { createStore } = require("./services/storageService");
 const { createCacheService } = require("./services/cacheService");
 const { createRateLimiter } = require("./middleware/rateLimiter");
+const { createKeepAliveService } = require("./services/keepAliveService");
 const AIService = require("./services/aiService");
 const createRoutes = require("./routes");
 
@@ -72,6 +73,9 @@ async function main() {
     )
   );
 
+  // Start keep-alive service (only in production)
+  const keepAlive = createKeepAliveService(config, logger);
+
   server.on("error", (err) => {
     if (err && err.code === "EADDRINUSE") {
       logger.error(
@@ -87,6 +91,12 @@ async function main() {
   // Graceful shutdown
   process.on("SIGTERM", async () => {
     logger.info("SIGTERM received, shutting down gracefully");
+    
+    // Stop keep-alive service
+    if (keepAlive && keepAlive.stop) {
+      keepAlive.stop();
+    }
+    
     server.close(async () => {
       await store.close();
       logger.info("Server closed");
