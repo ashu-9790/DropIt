@@ -143,48 +143,108 @@ Body: ...
   }
 
   _buildPrompt({ vibe, recipient, language, tone }) {
-    const name = recipient || "someone";
-    const isToast = vibe.toLowerCase().includes("toast");
+  const name = recipient || "someone";
+  const isToast = vibe.toLowerCase().includes("toast");
+  const lang = language.toLowerCase();
 
-    let languageRule = "";
+  let languageRule = "";
+  let examples = "";
 
-    if (language.toLowerCase() === "marathi") {
-      languageRule = `
+  // ===== MARATHI =====
+  if (lang === "marathi") {
+    languageRule = `
 Write in very simple spoken Marathi.
 Use everyday Marathi people actually speak.
-Use friendly "tomne" for roast.
 Avoid formal Marathi completely.
+Use natural friendly words.
+If roast, use funny "tomne" like close friends teasing each other.
 `;
-    } else if (language.toLowerCase() === "hindi") {
-      languageRule = `
-Write in simple spoken Hindi.
-Use desi casual Hindi.
-Mix basic English words naturally if needed.
-Avoid shuddh Hindi.
-`;
-    } else {
-      languageRule = `
-Write in simple English.
-No difficult vocabulary.
-`;
-    }
 
     if (isToast) {
-      return `
+      examples = `
+Example:
+Title: राहुलसाठी खास 🥂
+Body: राहुल खरंच खूप छान माणूस आहे. त्याच्या सोबत वेळ कसा जातो कळतच नाही. तो जिथे असतो तिथे नेहमी positive vibe असते. आयुष्यात त्याला खूप आनंद आणि यश मिळो.
+`;
+    } else {
+      examples = `
+Example:
+Title: राहुल म्हणजे चालता-बोलता गोंधळ 😂
+Body: राहुल साधं काम पण somehow कठीण करून दाखवतो. त्याचा confidence मात्र भन्नाट आहे. कसं manage करतो ते देवच जाणे. पण entertainment full मिळतं हे नक्की.
+`;
+    }
+  }
+
+  // ===== HINDI =====
+  else if (lang === "hindi") {
+    languageRule = `
+Write in simple spoken Hindi.
+Use casual everyday Hindi.
+Basic English words can mix naturally.
+Avoid formal shuddh Hindi.
+`;
+
+    if (isToast) {
+      examples = `
+Example:
+Title: राहुल के नाम 🥂
+Body: राहुल सच में बहुत अच्छे इंसान हैं. इनके साथ समय हमेशा अच्छा निकलता है. ये जहां होते हैं वहां अच्छी energy रहती है. जिंदगी इन्हें बहुत सारी खुशियां दे.
+`;
+    } else {
+      examples = `
+Example:
+Title: राहुल अलग ही नमूना है 😂
+Body: राहुल आसान काम भी मुश्किल बना देता है. confidence पूरा आसमान पर रहता है. कैसे manage करता है ये कोई नहीं जानता. लेकिन entertainment पूरा देता है.
+`;
+    }
+  }
+
+  // ===== ENGLISH =====
+  else {
+    languageRule = `
+Write in simple everyday English.
+No difficult vocabulary.
+`;
+
+    if (isToast) {
+      examples = `
+Example:
+Title: Cheers to Rahul 🥂
+Body: Rahul is the kind of person who makes every day better. Being around him always feels fun and easy. He brings good energy wherever he goes. Hope life gives him all the happiness he deserves.
+`;
+    } else {
+      examples = `
+Example:
+Title: Rahul: Walking Confusion 😂
+Body: Rahul can make even simple things look difficult. His confidence is much higher than his actual skills. Somehow he still manages to survive every day. Honestly, that itself deserves respect.
+`;
+    }
+  }
+
+  // ===== FINAL PROMPT =====
+  if (isToast) {
+    return `
 Write a heartfelt casual toast for ${name}.
 
 ${languageRule}
 
 Tone: ${tone}
 
-Examples:
+Requirements:
+- warm
+- simple
+- genuine
+- minimum 4 full sentences
 
-Title: Cheers to Rahul 🥂
-Body: Rahul is the kind of person who makes every day better. Being around him always feels easy and fun. He brings good energy wherever he goes. Hope life gives him all the happiness he deserves.
+${examples}
+
+Output format:
+Title: ...
+Body: ...
 `;
-    }
+  }
 
-    return `
+  return `
 Write a funny roast for ${name}.
 
 ${languageRule}
@@ -195,16 +255,17 @@ Requirements:
 - funny
 - playful
 - relatable
-- like friends teasing
+- friendly teasing
 - not offensive
-- minimum 4 sentences
+- minimum 4 full sentences
 
-Examples:
+${examples}
 
-Title: Rahul: Walking Confusion 😂
-Body: Rahul can make even simple things look difficult. His confidence is much higher than his actual skills. Somehow he still manages to survive every day. Honestly, that itself deserves respect.
+Output format:
+Title: ...
+Body: ...
 `;
-  }
+}
 
   _parseTitleAndBody(text) {
     if (!text) return null;
