@@ -108,8 +108,8 @@ class AIService {
           content: prompt
         }
       ],
-      temperature: 0.5,
-      max_tokens: 2000,
+      temperature: 0.6,
+      max_tokens: 2500,
     };
   }
 
@@ -160,19 +160,19 @@ class AIService {
     const name = recipient || "someone";
     const isToast = vibe && vibe.toLowerCase().includes("toast");
 
-    // Cultural instruction forcing simple, everyday language
+    // Cultural instruction forcing simple, everyday language without mentioning specific apps
     let culturalContext = "";
     if (language.toLowerCase() === "marathi") {
-      culturalContext = "Use extremely simple, everyday Marathi. If roasting, use funny, relatable 'tomne' (taunts) that friends use with each other. If toasting, be warm but keep it casual, like a heartfelt WhatsApp message. ABSOLUTELY NO formal, bookish, or heavy Marathi words.";
+      culturalContext = "Use extremely simple, everyday conversational Marathi. If roasting, use funny, relatable 'tomne' (taunts) that friends use with each other. If toasting, be warm but keep it casual. ABSOLUTELY NO formal, bookish, or heavy Marathi words.";
     } else if (language.toLowerCase() === "hindi") {
-      culturalContext = "Use very simple, everyday conversational Hindi (a natural mix with basic English words is okay). If roasting, use casual 'Desi' banter among friends. If toasting, keep it sweet and relatable. ABSOLUTELY NO heavy, formal 'Shuddh' Hindi.";
+      culturalContext = "Use very simple, everyday conversational Hindi (a natural mix with basic English words is fine). If roasting, use casual 'Desi' banter among friends. If toasting, keep it sweet and relatable. ABSOLUTELY NO heavy, formal 'Shuddh' Hindi.";
     } else {
-      culturalContext = "Use simple, everyday conversational English. Write exactly how best friends text each other. No big dictionary words.";
+      culturalContext = "Use simple, everyday conversational English. Write exactly how best friends talk to each other in real life. No big dictionary words.";
     }
 
     const type = isToast ? "heartfelt but casual TOAST" : "hilarious, relatable ROAST";
 
-    return `System: You are a hilarious and relatable friend writing a message.
+    return `System: You are a hilarious and relatable friend writing a short, direct note.
 Task: Write a ${type} for ${name} in ${language} language.
 Tone/Context: ${tone}
 ${culturalContext}
@@ -183,8 +183,9 @@ Body: [3 to 4 short sentences of high-quality ${vibe} content.]
 
 Important Constraints:
 1. USE SIMPLE LANGUAGE ONLY. Do not use high vocabulary, formal words, or poetic language. It must be easily understandable by a teenager.
-2. Do NOT include any introductory text (like "Here is your roast").
-3. Output ONLY the Title and Body in ${language}.`;
+2. DO NOT mention the words "WhatsApp", "text message", "message", or "app" anywhere in the title or body. Just write the actual roast/toast directly.
+3. Do NOT include any introductory text (like "Here is your roast").
+4. Output ONLY the Title and Body in ${language}.`;
   }
 
   _fallback(vibe, recipient) {
