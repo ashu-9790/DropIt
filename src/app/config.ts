@@ -25,9 +25,9 @@ function getApiBaseUrl(): string {
       return `${protocol}//localhost:5000`;
     }
 
-    // Production: use api subdomain
-    if (hostname === 'dropitt.me' || hostname === 'www.dropitt.me') {
-      return 'https://api.dropitt.me';
+    // Production: use Render backend URL
+    if (hostname === 'dropitt.me' || hostname === 'www.dropitt.me' || hostname.includes('vercel.app')) {
+      return 'https://drop-it-backend.onrender.com';
     }
 
     // Otherwise, use same origin
