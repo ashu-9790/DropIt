@@ -2,7 +2,7 @@
  * Admin Controller
  * Handles admin API endpoints
  */
-function createAdminController({ adminAuthService, adminStatsService, logger }) {
+function createAdminController({ adminAuthService, adminStatsService, adminSettingsService, logger }) {
   return {
     /**
      * POST /api/admin/login
@@ -199,6 +199,139 @@ function createAdminController({ adminAuthService, adminStatsService, logger }) 
           role: req.admin.role
         }
       });
+    },
+
+    /**
+     * GET /api/admin/settings
+     * Get system settings
+     */
+    async getSettings(req, res) {
+      try {
+        const result = await adminSettingsService.getSettings();
+        return res.json(result);
+      } catch (error) {
+        logger.error(`Admin get settings error: ${error.message}`);
+        return res.status(500).json({
+          success: false,
+          error: "Failed to fetch settings"
+        });
+      }
+    },
+
+    /**
+     * PUT /api/admin/settings
+     * Update system settings
+     */
+    async updateSettings(req, res) {
+      try {
+        const { settings } = req.body;
+
+        if (!settings) {
+          return res.status(400).json({
+            success: false,
+            error: "Settings object is required"
+          });
+        }
+
+        const result = await adminSettingsService.updateSettings(settings);
+        logger.info(`Admin updated settings`);
+        return res.json(result);
+      } catch (error) {
+        logger.error(`Admin update settings error: ${error.message}`);
+        return res.status(500).json({
+          success: false,
+          error: "Failed to update settings"
+        });
+      }
+    },
+
+    /**
+     * POST /api/admin/settings/maintenance
+     * Toggle maintenance mode
+     */
+    async toggleMaintenance(req, res) {
+      try {
+        const { enabled } = req.body;
+
+        if (typeof enabled !== "boolean") {
+          return res.status(400).json({
+            success: false,
+            error: "enabled (boolean) is required"
+          });
+        }
+
+        const result = await adminSettingsService.toggleMaintenanceMode(enabled);
+        logger.info(`Admin toggled maintenance mode: ${enabled}`);
+        return res.json(result);
+      } catch (error) {
+        logger.error(`Admin toggle maintenance error: ${error.message}`);
+        return res.status(500).json({
+          success: false,
+          error: "Failed to toggle maintenance mode"
+        });
+      }
+    },
+
+    /**
+     * POST /api/admin/settings/feature
+     * Toggle feature (roast/toast)
+     */
+    async toggleFeature(req, res) {
+      try {
+        const { feature, enabled } = req.body;
+
+        if (!feature || typeof enabled !== "boolean") {
+          return res.status(400).json({
+            success: false,
+            error: "feature (string) and enabled (boolean) are required"
+          });
+        }
+
+        const result = await adminSettingsService.toggleFeature(feature, enabled);
+        logger.info(`Admin toggled feature ${feature}: ${enabled}`);
+        return res.json(result);
+      } catch (error) {
+        logger.error(`Admin toggle feature error: ${error.message}`);
+        return res.status(500).json({
+          success: false,
+          error: "Failed to toggle feature"
+        });
+      }
+    },
+
+    /**
+     * POST /api/admin/cache/clear
+     * Clear cache
+     */
+    async clearCache(req, res) {
+      try {
+        const result = await adminSettingsService.clearCache();
+        logger.info(`Admin cleared cache`);
+        return res.json(result);
+      } catch (error) {
+        logger.error(`Admin clear cache error: ${error.message}`);
+        return res.status(500).json({
+          success: false,
+          error: "Failed to clear cache"
+        });
+      }
+    },
+
+    /**
+     * GET /api/admin/database/info
+     * Get database information
+     */
+    async getDatabaseInfo(req, res) {
+      try {
+        const result = await adminSettingsService.getDatabaseInfo();
+        return res.json(result);
+      } catch (error) {
+        logger.error(`Admin database info error: ${error.message}`);
+        return res.status(500).json({
+          success: false,
+          error: "Failed to fetch database info"
+        });
+      }
     }
   };
 }

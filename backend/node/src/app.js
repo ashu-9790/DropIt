@@ -9,6 +9,7 @@ const { createKeepAliveService } = require("./services/keepAliveService");
 const AIService = require("./services/aiService");
 const AdminAuthService = require("./services/adminAuthService");
 const AdminStatsService = require("./services/adminStatsService");
+const AdminSettingsService = require("./services/adminSettingsService");
 const createRoutes = require("./routes");
 const createAdminRoutes = require("./routes/adminRoutes");
 
@@ -58,10 +59,11 @@ async function main() {
   // Admin services
   const adminAuthService = new AdminAuthService(config);
   const adminStatsService = new AdminStatsService(store);
+  const adminSettingsService = new AdminSettingsService(store);
 
   // Routes
   app.use("/api", createRoutes({ store, gemini, logger, rateLimiter, cache }));
-  app.use("/api/admin", createAdminRoutes({ adminAuthService, adminStatsService, logger }));
+  app.use("/api/admin", createAdminRoutes({ adminAuthService, adminStatsService, adminSettingsService, logger }));
 
   // 404 handler
   app.use((req, res) => {
