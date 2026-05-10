@@ -3,6 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { animate, style, transition, trigger, state } from '@angular/animations';
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Title, Meta } from '@angular/platform-browser';
 import { MessageService, type Language, type Vibe } from '../message.service';
 
 @Component({
@@ -40,6 +41,8 @@ export class UnveilingComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly messageService = inject(MessageService);
+  private readonly titleService = inject(Title);
+  private readonly metaService = inject(Meta);
 
   private readonly previewContent = {
     vibe: 'Toast' as Vibe,
@@ -191,6 +194,23 @@ export class UnveilingComponent implements OnInit {
         this.body = response.data.content.body;
         this.currentLanguage = response.data.language || 'English';
         this.stats = response.data.stats || null;
+
+        // Update SEO Tags
+        const recipient = response.data.recipient || 'you';
+        const pageTitle = this.vibe === 'Toast' 
+          ? `✨ A sweet Toast for ${recipient} | DropIt` 
+          : `🔥 An epic Roast for ${recipient} | DropIt`;
+        
+        this.titleService.setTitle(pageTitle);
+        this.metaService.updateTag({ 
+          name: 'description', 
+          content: `Someone has dropped a ${this.vibe.toLowerCase()} for ${recipient}. Click to unveil the message and see what they said!` 
+        });
+        
+        // OpenGraph tags for better social sharing
+        this.metaService.updateTag({ property: 'og:title', content: pageTitle });
+        this.metaService.updateTag({ property: 'og:description', content: `Unveil this personalized ${this.vibe.toLowerCase()} on DropIt.` });
+        this.metaService.updateTag({ property: 'og:type', content: 'website' });
       },
       error: (error: unknown) => {
         this.loading = false;

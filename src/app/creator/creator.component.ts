@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Title, Meta } from '@angular/platform-browser';
 import { MessageService, type Language, type Vibe } from '../message.service';
 
 
@@ -12,9 +13,11 @@ import { MessageService, type Language, type Vibe } from '../message.service';
   templateUrl: './creator.component.html',
   styleUrl: './creator.component.css'
 })
-export class CreatorComponent {
+export class CreatorComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly messageService = inject(MessageService);
+  private readonly titleService = inject(Title);
+  private readonly metaService = inject(Meta);
 
   private readonly previewSharePath = '/view/preview';
 
@@ -57,6 +60,11 @@ export class CreatorComponent {
   });
 
   ngOnInit() {
+    this.titleService.setTitle('DropIt - Create a Personalized Roast or Toast');
+    this.metaService.updateTag({ 
+      name: 'description', 
+      content: 'Use our AI to craft the perfect roast or toast for your friends in English, Hindi, Marathi, or Hinglish. Spread vibes and spark reactions!' 
+    });
     this.checkFeatureStatus();
   }
 
