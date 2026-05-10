@@ -34,6 +34,10 @@ export class CreatorComponent {
   protected previewBody = '';
   protected generatedShareId = '';
   protected showSocialShare = false;
+  
+  // Maintenance flags
+  protected roastEnabled = true;
+  protected toastEnabled = true;
 
   readonly form = this.fb.nonNullable.group({
     creatorName: ['', [Validators.required, Validators.maxLength(80)]],
@@ -45,7 +49,26 @@ export class CreatorComponent {
     ),
   });
 
+  ngOnInit() {
+    this.checkFeatureStatus();
+  }
+
+  checkFeatureStatus() {
+    this.messageService.getSystemStatus().subscribe({
+      next: (status) => {
+        this.roastEnabled = status.features.roastEnabled;
+        this.toastEnabled = status.features.toastEnabled;
+      },
+      error: () => {
+        // Fallback to enabled
+      }
+    });
+  }
+
   beginDraft(vibe: Vibe): void {
+    if (vibe === 'Roast' && !this.roastEnabled) return;
+    if (vibe === 'Toast' && !this.toastEnabled) return;
+    
     this.selectedVibe = vibe;
     this.formVisible = true;
     this.generating = false;

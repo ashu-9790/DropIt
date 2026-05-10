@@ -12,6 +12,7 @@ const AdminStatsService = require("./services/adminStatsService");
 const AdminSettingsService = require("./services/adminSettingsService");
 const createRoutes = require("./routes");
 const createAdminRoutes = require("./routes/adminRoutes");
+const { createMaintenanceCheck } = require("./middleware/maintenanceCheck");
 
 async function main() {
   const app = express();
@@ -62,8 +63,11 @@ async function main() {
   const adminStatsService = new AdminStatsService(store);
   const adminSettingsService = new AdminSettingsService(store);
 
+  // Maintenance check middleware for public routes
+  const maintenanceCheck = createMaintenanceCheck(adminSettingsService, logger);
+  
   // Routes
-  app.use("/api", createRoutes({ store, gemini, logger, rateLimiter, cache }));
+  app.use("/api", maintenanceCheck, createRoutes({ store, gemini, logger, rateLimiter, cache, adminSettingsService }));
   app.use("/api/admin", createAdminRoutes({ adminAuthService, adminStatsService, adminSettingsService, logger }));
 
   // 404 handler

@@ -4,13 +4,29 @@ const { createMessageController } = require("../controllers/messageController");
 const { createMessageModel } = require("../models/messageModel");
 const { validateGenerateRequest, validateShareId } = require("../middleware/validation");
 
-function createRoutes({ store, gemini, logger, rateLimiter, cache }) {
+function createRoutes({ store, gemini, logger, rateLimiter, cache, adminSettingsService }) {
   const model = createMessageModel(store);
-  const controller = createMessageController({ model, gemini, logger, cache });
+  const controller = createMessageController({ model, gemini, logger, cache, adminSettingsService });
 
   // Health check
   router.get("/health", async (req, res) => {
     res.json({ ok: true, timestamp: new Date().toISOString() });
+  });
+
+  // System status (public)
+  router.get("/status", async (req, res) => {
+    try {
+      const settings = await adminSettingsService.getSettings();
+      if (settings.success) {
+        return res.json({
+          success: true,
+          features: settings.data.features
+        });
+      }
+      return res.status(500).json({ success: false, error: "Failed to fetch status" });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+    }
   });
 
   // Generate message endpoint

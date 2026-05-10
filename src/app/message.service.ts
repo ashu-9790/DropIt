@@ -60,6 +60,15 @@ export interface StatsResponse {
   };
 }
 
+export interface SystemStatus {
+  success: boolean;
+  features: {
+    roastEnabled: boolean;
+    toastEnabled: boolean;
+    maintenanceMode: boolean;
+  };
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -105,6 +114,14 @@ export class MessageService {
     );
   }
 
+  getSystemStatus(): Observable<SystemStatus> {
+    return this.http.get<SystemStatus>(
+      `${this.apiBaseUrl}/api/status`,
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   private handleError(error: any) {
     let errorMessage = 'An error occurred';
     
@@ -115,6 +132,9 @@ export class MessageService {
       // Server-side error
       if (error.status === 429) {
         errorMessage = 'Too many requests. Please wait a moment and try again.';
+      } else if (error.status === 503) {
+        // Maintenance mode
+        errorMessage = error.error?.message || 'The system is currently undergoing maintenance.';
       } else if (error.status === 400) {
         errorMessage = error.error?.error || 'Invalid request';
       } else if (error.status === 404) {

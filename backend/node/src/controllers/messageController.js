@@ -58,11 +58,33 @@ function sanitizeMessageContent(content, vibe, recipient) {
   return { title, body };
 }
 
-function createMessageController({ model, gemini, logger, cache }) {
+function createMessageController({ model, gemini, logger, cache, adminSettingsService }) {
   async function generate(req, res) {
     try {
       const payload = req.body || {};
       const vibe = payload.vibe || "Roast";
+
+      // Check if feature is enabled
+      if (adminSettingsService) {
+        const settings = await adminSettingsService.getSettings();
+        if (settings.success) {
+          const features = settings.data.features;
+          if (vibe === "Roast" && !features.roastEnabled) {
+            return res.status(503).json({
+              success: false,
+              error: "Maintenance",
+              message: "Roasts are currently disabled for maintenance. Try a Toast instead!"
+            });
+          }
+          if (vibe === "Toast" && !features.toastEnabled) {
+            return res.status(503).json({
+              success: false,
+              error: "Maintenance",
+              message: "Toasts are currently disabled for maintenance. Try a Roast instead!"
+            });
+          }
+        }
+      }
       const creator_name = payload.creator_name || "";
       const recipient_name = payload.recipient_name || "";
       const language = payload.language || "English";

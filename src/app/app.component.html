@@ -1,11 +1,34 @@
 <div class="min-h-screen bg-paper text-black flex flex-col">
-    @if (!isAdminRoute) {
-        <app-header></app-header>
-    }
-    <div class="flex-1">
-        <router-outlet></router-outlet>
-    </div>
-    @if (!isAdminRoute) {
-        <app-footer></app-footer>
+    @if (!maintenanceMode || isAdminRoute) {
+        @if (!isAdminRoute) {
+            <app-header></app-header>
+        }
+        <div class="flex-1">
+            <router-outlet></router-outlet>
+        </div>
+        @if (!isAdminRoute) {
+            <app-footer></app-footer>
+        }
+    } @else {
+        <!-- Brutalist Maintenance Screen -->
+        <main class="flex-1 flex flex-col items-center justify-center p-6 text-center">
+            <div data-aos="fade-down" class="mb-8">
+                <div class="h-32 w-32 md:h-40 md:w-40 border-4 border-black bg-white shadow-[12px_12px_0_rgba(17,17,17,1)] flex items-center justify-center text-6xl rotate-3">
+                    🛠️
+                </div>
+            </div>
+            
+            <h1 data-aos="fade-up" data-aos-delay="100" class="font-script font-bold text-[3.5rem] md:text-[5.5rem] leading-none mb-6">
+                Be Right Back!
+            </h1>
+            
+            <p data-aos="fade-up" data-aos-delay="200" class="font-mono text-[0.8rem] md:text-[1rem] uppercase tracking-[0.25em] text-black/60 max-w-lg">
+                DropIt is currently undergoing some <span class="text-black font-bold">maintenance</span> to make the experience even better for you.
+            </p>
+            
+            <div data-aos="fade-up" data-aos-delay="300" class="mt-12 p-4 border-2 border-dashed border-black/20 font-mono text-[0.65rem] uppercase tracking-widest text-black/40">
+                Estimated downtime: <span class="text-black/60">approx. 1 hour</span>
+            </div>
+        </main>
     }
 </div>
