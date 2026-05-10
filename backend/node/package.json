@@ -1,7 +1,7 @@
 {
   "name": "drop-it-backend",
   "version": "1.0.0",
-  "description": "DropIt backend (Node.js) — Express + Mongo + OpenRouter AI scaffold",
+  "description": "DropIt backend (Node.js) — Express + Mongo + Google Gemini AI",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",

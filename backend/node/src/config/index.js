@@ -9,8 +9,7 @@ const cfg = {
   PORT: process.env.PORT ? parseInt(process.env.PORT, 10) : 8080,
   MONGO_URI: process.env.MONGO_URI || null,
   MONGO_DB: process.env.MONGO_DB || "dropit",
-  OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY || null,
-  OPENROUTER_MODEL: process.env.OPENROUTER_MODEL || "openai/gpt-4o",
+
   GEMINI_API_KEY: process.env.GEMINI_API_KEY || null,
   GEMINI_MODEL: process.env.GEMINI_MODEL || "gemini-flash-latest",
   CORS_ORIGINS: process.env.CORS_ORIGINS || "http://localhost:4200",

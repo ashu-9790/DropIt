@@ -1,19 +1,19 @@
 # DropIt Backend
 
-Node.js backend for DropIt - Express + MongoDB + OpenRouter AI
+Node.js backend for DropIt - Express + MongoDB + Google Gemini AI
 
 ## Deployment on Render
 
 ### Prerequisites
 - MongoDB Atlas account (or other MongoDB hosting)
-- OpenRouter API key
+- Google Gemini API key
 
 ### Environment Variables Required
 - `NODE_ENV=production`
 - `MONGO_URI` - Your MongoDB connection string
 - `MONGO_DB=dropit`
-- `OPENROUTER_API_KEY` - Your OpenRouter API key
-- `OPENROUTER_MODEL=openai/gpt-4o`
+- `GEMINI_API_KEY` - Your Google Gemini API key
+- `GEMINI_MODEL=gemini-flash-latest`
 - `CORS_ORIGINS=https://dropitt.me,https://www.dropitt.me`
 
 ### Deploy Steps
@@ -53,5 +53,5 @@ npm run dev
 
 ## Notes
 
-- If OpenRouter fails or is not configured, the service returns a deterministic fallback message
+- If Gemini fails or is not configured, the service returns a deterministic fallback message
 - Fallback messages are recorded with `generation.source: "fallback"` and `generation.model: "template"`
