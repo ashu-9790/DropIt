@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AdminService, AdminStats, Message } from '../admin.service';
+import * as AOS from 'aos';
 
 
 @Component({
@@ -42,6 +43,7 @@ export class OverviewComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           this.topMessages = response.data.messages;
+          setTimeout(() => AOS.refresh(), 200);
         }
       }
     });
