@@ -23,7 +23,7 @@ class AdminStatsService {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const messagesToday = await messagesCollection.countDocuments({
-        "metadata.created_at": { $gte: today.toISOString() }
+        "created_at": { $gte: today }
       });
 
       // Total views and shares
@@ -31,8 +31,8 @@ class AdminStatsService {
         {
           $group: {
             _id: null,
-            totalViews: { $sum: { $ifNull: ["$stats.views", 0] } },
-            totalShares: { $sum: { $ifNull: ["$stats.shares", 0] } }
+            totalViews: { $sum: { $ifNull: ["$view_count", 0] } },
+            totalShares: { $sum: { $ifNull: ["$share_count", 0] } }
           }
         }
       ]).toArray();
@@ -96,12 +96,12 @@ class AdminStatsService {
         query.language = filters.language;
       }
       if (filters.startDate || filters.endDate) {
-        query["metadata.created_at"] = {};
+        query["created_at"] = {};
         if (filters.startDate) {
-          query["metadata.created_at"].$gte = filters.startDate;
+          query["created_at"].$gte = new Date(filters.startDate);
         }
         if (filters.endDate) {
-          query["metadata.created_at"].$lte = filters.endDate;
+          query["created_at"].$lte = new Date(filters.endDate);
         }
       }
 
@@ -122,9 +122,9 @@ class AdminStatsService {
             vibe: m.vibe,
             language: m.language,
             title: m.content?.title || "",
-            views: m.stats?.views || 0,
-            shares: m.stats?.shares || 0,
-            createdAt: m.metadata?.created_at || "",
+            views: m.view_count || 0,
+            shares: m.share_count || 0,
+            createdAt: m.created_at || "",
             creatorName: m.creator_name || "",
             recipientName: m.recipient_name || "",
           })),
@@ -153,7 +153,7 @@ class AdminStatsService {
       const dailyStats = await messagesCollection.aggregate([
         {
           $match: {
-            "metadata.created_at": { $gte: startDate.toISOString() }
+            "created_at": { $gte: startDate }
           }
         },
         {
@@ -161,7 +161,7 @@ class AdminStatsService {
             _id: {
               $dateToString: {
                 format: "%Y-%m-%d",
-                date: { $dateFromString: { dateString: "$metadata.created_at" } }
+                date: "$created_at"
               }
             },
             roastCount: {
@@ -218,9 +218,9 @@ class AdminStatsService {
             shareId: m.share_id,
             vibe: m.vibe,
             title: m.content?.title || "",
-            views: m.stats?.views || 0,
-            shares: m.stats?.shares || 0,
-            createdAt: m.metadata?.created_at || "",
+            views: m.view_count || 0,
+            shares: m.share_count || 0,
+            createdAt: m.created_at || "",
             creatorName: m.creator_name || "",
             recipientName: m.recipient_name || "",
           }))
