@@ -39,6 +39,13 @@ export class CreatorComponent {
   protected roastEnabled = true;
   protected toastEnabled = true;
 
+  get quirksPlaceholder(): string {
+    if (this.selectedVibe === 'Toast') {
+      return "What makes them awesome? Mention their achievements, why you're proud of them, or a sweet memory. The more heart you put in, the better the AI gets!";
+    }
+    return "Their habits, inside jokes, secret chaos, or soft spots. The more 'tea' you spill, the better the AI gets!";
+  }
+
   readonly form = this.fb.nonNullable.group({
     creatorName: ['', [Validators.required, Validators.maxLength(80)]],
     recipientName: ['', [Validators.required, Validators.maxLength(80)]],
