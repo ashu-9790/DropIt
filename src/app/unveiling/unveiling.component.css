@@ -40,3 +40,28 @@
     opacity: 0;
   }
 }
+
+/* Floating Emoji Animation */
+.floating-emoji {
+  position: fixed;
+  bottom: -50px;
+  font-size: 2rem;
+  pointer-events: none;
+  z-index: 100;
+  animation: emoji-float linear forwards;
+}
+
+@keyframes emoji-float {
+  0% {
+    transform: translateY(0) translateX(0) scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    transform: translateY(-5vh) translateX(0) scale(1.2) rotate(10deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(calc(var(--wiggle) * 100px)) scale(1) rotate(var(--rotation));
+    opacity: 0;
+  }
+}

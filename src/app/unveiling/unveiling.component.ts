@@ -59,6 +59,8 @@ export class UnveilingComponent implements OnInit {
   protected selectedReaction: string | null = null;
   protected reactions = ['😂', '🔥', '💀', '😭', '👏', '❤️'];
   protected currentLanguage: Language = 'English';
+  protected floatingEmojis: { id: number; emoji: string; left: number; duration: number }[] = [];
+  private emojiIdCounter = 0;
 
   private readonly translations = {
     English: {
@@ -192,7 +194,24 @@ export class UnveilingComponent implements OnInit {
   
   reactWithEmoji(emoji: string): void {
     this.selectedReaction = emoji;
-    // Here you could send the reaction to backend
+    
+    // Create multiple floating emojis for a "burst" effect
+    for (let i = 0; i < 6; i++) {
+      this.addFloatingEmoji(emoji);
+    }
+  }
+
+  private addFloatingEmoji(emoji: string): void {
+    const id = this.emojiIdCounter++;
+    const left = Math.random() * 80 + 10; // Random horizontal position (10% to 90%)
+    const duration = 1500 + Math.random() * 1000; // 1.5s to 2.5s
+
+    this.floatingEmojis.push({ id, emoji, left, duration });
+
+    // Cleanup after animation
+    setTimeout(() => {
+      this.floatingEmojis = this.floatingEmojis.filter(e => e.id !== id);
+    }, duration);
   }
 
   async copyLink(): Promise<void> {

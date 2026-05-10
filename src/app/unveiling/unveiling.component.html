@@ -26,6 +26,17 @@
     </div>
     }
 
+    <!-- Floating Emojis Burst -->
+    @for (fe of floatingEmojis; track fe.id) {
+    <div class="floating-emoji"
+        [style.left.%]="fe.left"
+        [style.animation-duration.ms]="fe.duration"
+        [style.--wiggle]="fe.id % 2 === 0 ? 1 : -1"
+        [style.--rotation]="(fe.id % 45) + 'deg'">
+        {{ fe.emoji }}
+    </div>
+    }
+
     <section
         class="mx-auto flex min-h-screen w-full max-w-4xl flex-col items-center justify-center px-6 py-16 text-center">
 
@@ -121,13 +132,12 @@
             </div>
 
             <!-- Reveal Button -->
-            <div class="pt-6" data-aos="fade-up" data-aos-delay="200">
-                @if (!revealOpen) {
+            @if (!revealOpen) {
+            <div class="pt-4" data-aos="fade-up" data-aos-delay="200">
                 <button
                     type="button"
                     class="group relative overflow-hidden border-4 border-black bg-black px-12 py-6 font-mono font-extrabold text-lg sm:text-xl uppercase tracking-widest text-white transition-all duration-300 hover:-translate-y-2 hover:bg-white hover:text-black hover:shadow-[16px_16px_0_rgba(17,17,17,1)] active:translate-y-0 active:shadow-none"
-                    (click)="reveal()"
-                    [@fadeAway]="revealOpen">
+                    (click)="reveal()">
                     
                     <span class="relative z-10 flex items-center justify-center gap-4">
                         {{ localizedContent.btn }}
@@ -136,8 +146,8 @@
                     <!-- Inner Border Decor -->
                     <div class="absolute inset-1 border border-white/20 pointer-events-none group-hover:border-black/10"></div>
                 </button>
-                }
             </div>
+            }
 
             <!-- Revealed Content -->
             @if (revealOpen) {
