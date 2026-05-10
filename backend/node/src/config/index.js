@@ -20,12 +20,20 @@ const cfg = {
   REQUEST_TIMEOUT_MS: parseInt(process.env.REQUEST_TIMEOUT_MS || "30000", 10), // 30 sec
   MONGO_POOL_SIZE: parseInt(process.env.MONGO_POOL_SIZE || "10", 10),
   CACHE_TTL_SECONDS: parseInt(process.env.CACHE_TTL_SECONDS || "3600", 10), // 1 hour
+  
+  // Admin settings
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL || "ap548024@gmail.com",
+  ADMIN_PASSWORD_HASH: process.env.ADMIN_PASSWORD_HASH || null,
+  JWT_SECRET: process.env.JWT_SECRET || null,
+  JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN || "7d",
 };
 
 // Validate required config
 if (cfg.NODE_ENV === "production") {
   if (!cfg.MONGO_URI) throw new Error("MONGO_URI is required in production");
   if (!cfg.OPENROUTER_API_KEY) throw new Error("OPENROUTER_API_KEY is required in production");
+  if (!cfg.ADMIN_PASSWORD_HASH) throw new Error("ADMIN_PASSWORD_HASH is required in production");
+  if (!cfg.JWT_SECRET) throw new Error("JWT_SECRET is required in production");
 }
 
 module.exports = cfg;

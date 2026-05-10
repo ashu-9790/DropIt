@@ -7,7 +7,10 @@ const { createCacheService } = require("./services/cacheService");
 const { createRateLimiter } = require("./middleware/rateLimiter");
 const { createKeepAliveService } = require("./services/keepAliveService");
 const AIService = require("./services/aiService");
+const AdminAuthService = require("./services/adminAuthService");
+const AdminStatsService = require("./services/adminStatsService");
 const createRoutes = require("./routes");
+const createAdminRoutes = require("./routes/adminRoutes");
 
 async function main() {
   const app = express();
@@ -51,9 +54,14 @@ async function main() {
     config.RATE_LIMIT_MAX_REQUESTS
   );
   const gemini = new AIService(config);
+  
+  // Admin services
+  const adminAuthService = new AdminAuthService(config);
+  const adminStatsService = new AdminStatsService(store);
 
   // Routes
   app.use("/api", createRoutes({ store, gemini, logger, rateLimiter, cache }));
+  app.use("/api/admin", createAdminRoutes({ adminAuthService, adminStatsService, logger }));
 
   // 404 handler
   app.use((req, res) => {
