@@ -107,7 +107,7 @@ class AdminStatsService {
 
       const messages = await messagesCollection
         .find(query)
-        .sort({ "metadata.created_at": -1 })
+        .sort({ "created_at": -1 })
         .skip(skip)
         .limit(limit)
         .toArray();
@@ -203,7 +203,7 @@ class AdminStatsService {
       if (!db) return { success: false, error: "Database not connected" };
       const messagesCollection = db.collection("messages");
 
-      const sortField = type === "views" ? "stats.views" : "stats.shares";
+      const sortField = type === "views" ? "view_count" : "share_count";
 
       const topMessages = await messagesCollection
         .find()

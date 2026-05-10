@@ -30,8 +30,10 @@ export class MessagesComponent implements OnInit {
     this.loadMessages();
   }
 
-  loadMessages(): void {
-    this.loading = true;
+  loadMessages(append = false): void {
+    if (!append) {
+      this.loading = true;
+    }
     const filterObj = {
       ...(this.filters.vibe && { vibe: this.filters.vibe }),
       ...(this.filters.language && { language: this.filters.language })
@@ -40,7 +42,11 @@ export class MessagesComponent implements OnInit {
     this.adminService.getMessages(this.currentPage, this.limit, filterObj).subscribe({
       next: (response) => {
         if (response.success) {
-          this.messages = response.data.messages;
+          if (append) {
+            this.messages = [...this.messages, ...response.data.messages];
+          } else {
+            this.messages = response.data.messages;
+          }
           this.totalPages = response.data.totalPages;
         }
         this.loading = false;
@@ -107,17 +113,10 @@ export class MessagesComponent implements OnInit {
     });
   }
 
-  previousPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.loadMessages();
-    }
-  }
-
-  nextPage(): void {
+  loadMore(): void {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
-      this.loadMessages();
+      this.loadMessages(true);
     }
   }
 }
