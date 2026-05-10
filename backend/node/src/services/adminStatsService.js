@@ -31,8 +31,22 @@ class AdminStatsService {
         {
           $group: {
             _id: null,
-            totalViews: { $sum: { $ifNull: ["$view_count", 0] } },
-            totalShares: { $sum: { $ifNull: ["$share_count", 0] } }
+            totalViews: { 
+              $sum: { 
+                $add: [
+                  { $ifNull: ["$view_count", 0] },
+                  { $ifNull: ["$stats.views", 0] }
+                ] 
+              } 
+            },
+            totalShares: { 
+              $sum: { 
+                $add: [
+                  { $ifNull: ["$share_count", 0] },
+                  { $ifNull: ["$stats.shares", 0] }
+                ] 
+              } 
+            }
           }
         }
       ]).toArray();
@@ -203,13 +217,29 @@ class AdminStatsService {
       if (!db) return { success: false, error: "Database not connected" };
       const messagesCollection = db.collection("messages");
 
-      const sortField = type === "views" ? "view_count" : "share_count";
-
-      const topMessages = await messagesCollection
-        .find()
-        .sort({ [sortField]: -1 })
-        .limit(limit)
-        .toArray();
+      // Use aggregation to handle both old 'stats.views' and new 'view_count'
+      const sortField = type === "views" ? "total_views" : "total_shares";
+      
+      const topMessages = await messagesCollection.aggregate([
+        {
+          $addFields: {
+            total_views: { 
+              $add: [
+                { $ifNull: ["$view_count", 0] },
+                { $ifNull: ["$stats.views", 0] }
+              ] 
+            },
+            total_shares: { 
+              $add: [
+                { $ifNull: ["$share_count", 0] },
+                { $ifNull: ["$stats.shares", 0] }
+              ] 
+            }
+          }
+        },
+        { $sort: { [sortField]: -1 } },
+        { $limit: limit }
+      ]).toArray();
 
       return {
         success: true,
@@ -218,9 +248,9 @@ class AdminStatsService {
             shareId: m.share_id,
             vibe: m.vibe,
             title: m.content?.title || "",
-            views: m.view_count || 0,
-            shares: m.share_count || 0,
-            createdAt: m.created_at || "",
+            views: m.total_views || 0,
+            shares: m.total_shares || 0,
+            createdAt: m.created_at || m.metadata?.created_at || "",
             creatorName: m.creator_name || "",
             recipientName: m.recipient_name || "",
           }))
