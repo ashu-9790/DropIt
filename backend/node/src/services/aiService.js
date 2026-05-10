@@ -122,7 +122,7 @@ Rules:
 5. Marathi should be casual spoken Marathi.
 6. Roast should be funny, playful, and relatable.
 7. Toast should feel warm and genuine.
-8. Minimum 4 complete sentences.
+8. Minimum 6-8 complete and detailed sentences.
 9. Output ONLY this format:
 
 Title: ...
@@ -138,7 +138,7 @@ Body: ...
       top_p: 0.95,
       frequency_penalty: 0.3,
       presence_penalty: 0.3,
-      max_tokens: 700,
+      max_tokens: 1000,
     };
   }
 
@@ -234,7 +234,7 @@ Requirements:
 - warm
 - simple
 - genuine
-- minimum 4 full sentences
+- minimum 6-8 full sentences
 
 ${examples}
 
@@ -257,7 +257,7 @@ Requirements:
 - relatable
 - friendly teasing
 - not offensive
-- minimum 4 full sentences
+- minimum 6-8 full sentences
 
 ${examples}
 
