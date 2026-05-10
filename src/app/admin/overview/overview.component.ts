@@ -43,6 +43,7 @@ export class OverviewComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           this.topMessages = response.data.messages;
+          console.log('Top Messages loaded:', this.topMessages.length);
           setTimeout(() => AOS.refresh(), 200);
         }
       }
