@@ -1,0 +1,75 @@
+<main class="min-h-screen bg-paper text-black relative overflow-hidden">
+    
+    <!-- Decorative Elements -->
+    <div class="absolute inset-0 pointer-events-none opacity-5">
+        <div class="absolute top-20 left-10 text-[8rem] rotate-12">🔥</div>
+        <div class="absolute top-40 right-20 text-[6rem] -rotate-12">🥂</div>
+        <div class="absolute bottom-32 left-1/4 text-[7rem] rotate-45">💧</div>
+        <div class="absolute bottom-20 right-1/3 text-[5rem] -rotate-12">✨</div>
+    </div>
+
+    <section class="mx-auto flex min-h-screen w-full max-w-4xl flex-col items-center justify-center px-6 py-16 text-center relative z-10">
+        
+        <div class="w-full space-y-14 sm:space-y-16">
+            
+            <!-- 404 Number -->
+            <div class="space-y-6">
+                <div class="font-script font-bold text-[8rem] leading-none tracking-tight sm:text-[12rem] md:text-[14rem] text-black/10">
+                    404
+                </div>
+                
+                <div class="space-y-4 -mt-20 sm:-mt-32">
+                    <p class="font-mono text-[0.68rem] uppercase tracking-[0.34em] text-black/55">
+                        Oops! Page not found
+                    </p>
+                    
+                    <h1 class="font-script font-bold text-[3rem] leading-[0.9] tracking-tight sm:text-[4.5rem] md:text-[5.5rem]">
+                        This page took a detour
+                    </h1>
+                    
+                    <p class="mx-auto max-w-xl font-body text-[1rem] leading-relaxed text-black/70 sm:text-[1.125rem]">
+                        Looks like this link is broken or the page doesn't exist. 
+                        Let's get you back on track!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Broken Link Illustration -->
+            <div class="flex items-center justify-center gap-4 py-8">
+                <div class="h-2 w-20 bg-black/20 rounded-full"></div>
+                <div class="relative">
+                    <svg class="h-16 w-16 text-black/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                    </svg>
+                    <div class="absolute -top-1 -right-1 h-6 w-6 bg-black rounded-full flex items-center justify-center">
+                        <span class="text-paper text-xs">✕</span>
+                    </div>
+                </div>
+                <div class="h-2 w-20 bg-black/20 rounded-full"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a routerLink="/create"
+                    class="border border-black bg-black px-8 py-4 font-mono text-[0.68rem] uppercase tracking-[0.28em] text-paper transition duration-200 hover:-translate-y-0.5 hover:scale-105 hover:bg-transparent hover:text-black hover:shadow-lg">
+                    🏠 Go Home
+                </a>
+                
+                <a routerLink="/create"
+                    class="border border-black bg-transparent px-8 py-4 font-mono text-[0.68rem] uppercase tracking-[0.28em] text-black transition duration-200 hover:-translate-y-0.5 hover:scale-105 hover:bg-black hover:text-paper hover:shadow-lg">
+                    ✨ Create a Message
+                </a>
+            </div>
+
+            <!-- Help Text -->
+            <div class="pt-8 border-t border-black/10">
+                <p class="font-mono text-[0.65rem] uppercase tracking-[0.24em] text-black/50">
+                    Need help? Check the URL or start fresh
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
