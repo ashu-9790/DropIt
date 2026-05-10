@@ -1,11 +1,16 @@
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 const config = require("../config");
 const logger = require("../logger");
 
 class AIService {
   constructor(cfg) {
     this.cfg = cfg || config;
-    this.apiKey = this.cfg.OPENROUTER_API_KEY;
-    this.model = this.cfg.OPENROUTER_MODEL;
+    this.apiKey = this.cfg.GEMINI_API_KEY;
+    this.model = this.cfg.GEMINI_MODEL;
+    
+    if (this.apiKey) {
+      this.genAI = new GoogleGenerativeAI(this.apiKey);
+    }
   }
 
   async generate(
@@ -25,62 +30,45 @@ class AIService {
     });
 
     if (!this.apiKey) {
-      logger.info("OpenRouter API key missing — using fallback");
+      logger.info("Gemini API key missing — using fallback");
       return this._fallback(vibe, recipient, language);
     }
 
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(
-        () => controller.abort(),
-        this.cfg.REQUEST_TIMEOUT_MS
-      );
+      const model = this.genAI.getGenerativeModel({ 
+        model: this.model,
+        systemInstruction: `
+You are an expert writer for funny roasts and heartfelt toasts.
 
-      const res = await fetch(
-        "https://openrouter.ai/api/v1/chat/completions",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${this.apiKey}`,
-            "Content-Type": "application/json",
-            "HTTP-Referer": "https://dropit.me",
-            "X-Title": "DropIt",
-          },
-          body: JSON.stringify(this._makeRequestBody(prompt)),
-          signal: controller.signal,
-        }
-      );
+Rules:
+1. Use VERY SIMPLE language.
+2. No difficult words.
+3. Sound like close friends talking.
+4. Hindi should be casual spoken Hindi.
+5. Marathi should be casual spoken Marathi.
+6. Roast should be funny, playful, and relatable.
+7. Toast should feel warm and genuine.
+8. Minimum 5-6 complete and detailed sentences.
+9. Output ONLY this format:
 
-      clearTimeout(timeoutId);
+Title: ...
+Body: ...
+`
+      });
 
-      const text = await res.text();
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const content = response.text();
 
-      if (!res.ok) {
-        logger.error(
-          `OpenRouter HTTP ${res.status}: ${text.substring(0, 200)}`
-        );
-        return this._fallback(vibe, recipient, language);
-      }
+      logger.debug("Raw Gemini response: " + content.substring(0, 500));
 
-      logger.debug("Raw AI response: " + text.substring(0, 500));
+      const parsed = this._parseTitleAndBody(content);
 
-      let parsed;
-      try {
-        parsed = JSON.parse(text);
-      } catch {
-        logger.error("Invalid JSON from OpenRouter");
-        return this._fallback(vibe, recipient, language);
-      }
-
-      const content = parsed?.choices?.[0]?.message?.content || "";
-
-      const result = this._parseTitleAndBody(content);
-
-      if (result?.title && result?.body) {
+      if (parsed?.title && parsed?.body) {
         return {
-          title: result.title,
-          body: result.body,
-          source: "openrouter",
+          title: parsed.title,
+          body: parsed.body,
+          source: "gemini",
           model: this.model,
         };
       }
@@ -100,59 +88,22 @@ class AIService {
 
       return this._fallback(vibe, recipient, language);
     } catch (err) {
-      logger.error(err.message);
+      logger.error("Gemini Error: " + err.message);
       return this._fallback(vibe, recipient, language);
     }
   }
 
-  _makeRequestBody(prompt) {
-    return {
-      model: this.model,
-      messages: [
-        {
-          role: "system",
-          content: `
-You are an expert writer for funny roasts and heartfelt toasts.
-
-Rules:
-1. Use VERY SIMPLE language.
-2. No difficult words.
-3. Sound like close friends talking.
-4. Hindi should be casual spoken Hindi.
-5. Marathi should be casual spoken Marathi.
-6. Roast should be funny, playful, and relatable.
-7. Toast should feel warm and genuine.
-8. Minimum 6-8 complete and detailed sentences.
-9. Output ONLY this format:
-
-Title: ...
-Body: ...
-`,
-        },
-        {
-          role: "user",
-          content: prompt,
-        },
-      ],
-      temperature: 0.9,
-      top_p: 0.95,
-      frequency_penalty: 0.3,
-      presence_penalty: 0.3,
-      max_tokens: 1000,
-    };
-  }
-
   _buildPrompt({ vibe, recipient, language, tone }) {
-  const name = recipient || "someone";
-  const isToast = vibe.toLowerCase().includes("toast");
-  const lang = language.toLowerCase();
+    const name = recipient || "someone";
+    const isToast = vibe.toLowerCase().includes("toast");
+    const lang = language.toLowerCase();
 
-  let languageRule = "";
-  let examples = "";
+    let languageRule = "";
+    let examples = "";
 
-  // ===== MARATHI =====
-  if (lang === "marathi") {
-    languageRule = `
+    // ===== MARATHI =====
+    if (lang === "marathi") {
+      languageRule = `
 Write in very simple spoken Marathi.
 Use everyday Marathi people actually speak.
 Avoid formal Marathi completely.
@@ -160,70 +111,70 @@ Use natural friendly words.
 If roast, use funny "tomne" like close friends teasing each other.
 `;
 
-    if (isToast) {
-      examples = `
+      if (isToast) {
+        examples = `
 Example:
 Title: राहुलसाठी खास 🥂
 Body: राहुल खरंच खूप छान माणूस आहे. त्याच्या सोबत वेळ कसा जातो कळतच नाही. तो जिथे असतो तिथे नेहमी positive vibe असते. आयुष्यात त्याला खूप आनंद आणि यश मिळो.
 `;
-    } else {
-      examples = `
+      } else {
+        examples = `
 Example:
 Title: राहुल म्हणजे चालता-बोलता गोंधळ 😂
 Body: राहुल साधं काम पण somehow कठीण करून दाखवतो. त्याचा confidence मात्र भन्नाट आहे. कसं manage करतो ते देवच जाणे. पण entertainment full मिळतं हे नक्की.
 `;
+      }
     }
-  }
 
-  // ===== HINDI =====
-  else if (lang === "hindi") {
-    languageRule = `
+    // ===== HINDI =====
+    else if (lang === "hindi") {
+      languageRule = `
 Write in simple spoken Hindi.
 Use casual everyday Hindi.
 Basic English words can mix naturally.
 Avoid formal shuddh Hindi.
 `;
 
-    if (isToast) {
-      examples = `
+      if (isToast) {
+        examples = `
 Example:
 Title: राहुल के नाम 🥂
 Body: राहुल सच में बहुत अच्छे इंसान हैं. इनके साथ समय हमेशा अच्छा निकलता है. ये जहां होते हैं वहां अच्छी energy रहती है. जिंदगी इन्हें बहुत सारी खुशियां दे.
 `;
-    } else {
-      examples = `
+      } else {
+        examples = `
 Example:
 Title: राहुल अलग ही नमूना है 😂
 Body: राहुल आसान काम भी मुश्किल बना देता है. confidence पूरा आसमान पर रहता है. कैसे manage करता है ये कोई नहीं जानता. लेकिन entertainment पूरा देता है.
 `;
+      }
     }
-  }
 
-  // ===== ENGLISH =====
-  else {
-    languageRule = `
+    // ===== ENGLISH =====
+    else {
+      languageRule = `
 Write in simple everyday English.
 No difficult vocabulary.
 `;
 
-    if (isToast) {
-      examples = `
+      if (isToast) {
+        examples = `
 Example:
 Title: Cheers to Rahul 🥂
 Body: Rahul is the kind of person who makes every day better. Being around him always feels fun and easy. He brings good energy wherever he goes. Hope life gives him all the happiness he deserves.
 `;
-    } else {
-      examples = `
+      } else {
+        examples = `
 Example:
 Title: Rahul: Walking Confusion 😂
 Body: Rahul can make even simple things look difficult. His confidence is much higher than his actual skills. Somehow he still manages to survive every day. Honestly, that itself deserves respect.
 `;
+      }
     }
-  }
 
-  // ===== FINAL PROMPT =====
-  if (isToast) {
-    return `
+    // ===== FINAL PROMPT =====
+    if (isToast) {
+      return `
 Write a heartfelt casual toast for ${name}.
 
 ${languageRule}
@@ -234,7 +185,7 @@ Requirements:
 - warm
 - simple
 - genuine
-- minimum 6-8 full sentences
+- minimum 5-6 full sentences
 
 ${examples}
 
@@ -242,9 +193,9 @@ Output format:
 Title: ...
 Body: ...
 `;
-  }
+    }
 
-  return `
+    return `
 Write a funny roast for ${name}.
 
 ${languageRule}
@@ -257,7 +208,7 @@ Requirements:
 - relatable
 - friendly teasing
 - not offensive
-- minimum 6-8 full sentences
+- minimum 5-6 full sentences
 
 ${examples}
 
@@ -265,7 +216,7 @@ Output format:
 Title: ...
 Body: ...
 `;
-}
+  }
 
   _parseTitleAndBody(text) {
     if (!text) return null;
@@ -295,8 +246,8 @@ Body: ...
 
     if (lines.length >= 2) {
       return {
-        title: lines[0],
-        body: lines.slice(1).join(" "),
+        title: lines[0].replace(/^title:\s*/i, "").trim(),
+        body: lines.slice(1).join(" ").replace(/^body:\s*/i, "").trim(),
       };
     }
 

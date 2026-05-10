@@ -11,6 +11,8 @@ const cfg = {
   MONGO_DB: process.env.MONGO_DB || "dropit",
   OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY || null,
   OPENROUTER_MODEL: process.env.OPENROUTER_MODEL || "openai/gpt-4o",
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY || null,
+  GEMINI_MODEL: process.env.GEMINI_MODEL || "gemini-flash-latest",
   CORS_ORIGINS: process.env.CORS_ORIGINS || "http://localhost:4200",
   LOG_FILE:
     process.env.LOG_FILE ||
@@ -31,7 +33,7 @@ const cfg = {
 // Validate required config
 if (cfg.NODE_ENV === "production") {
   if (!cfg.MONGO_URI) throw new Error("MONGO_URI is required in production");
-  if (!cfg.OPENROUTER_API_KEY) throw new Error("OPENROUTER_API_KEY is required in production");
+  if (!cfg.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is required in production");
   if (!cfg.ADMIN_PASSWORD_HASH) throw new Error("ADMIN_PASSWORD_HASH is required in production");
   if (!cfg.JWT_SECRET) throw new Error("JWT_SECRET is required in production");
 }
