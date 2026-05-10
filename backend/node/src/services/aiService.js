@@ -150,6 +150,30 @@ Body: राहुल आसान काम भी मुश्किल बन
       }
     }
 
+    // ===== HINGLISH =====
+    else if (lang === "hinglish") {
+      languageRule = `
+Write in Hinglish (Hindi language using English alphabet/Roman script).
+Use very casual Gen-Z or millennial slang.
+Mix Hindi and English words naturally as people do in WhatsApp chats.
+Sound like a cool friend.
+`;
+
+      if (isToast) {
+        examples = `
+Example:
+Title: Rahul ke liye cheers 🥂
+Body: Rahul sach mein ek gem hai. Iske saath rehne se life thodi easy lagne lagti hai. Jahan bhi jata hai, positivity faila deta hai. Bro, you deserve all the success and happiness in the world!
+`;
+      } else {
+        examples = `
+Example:
+Title: Rahul: Legend of Confusion 😂
+Body: Rahul bhai ka level hi alag hai. Simple se kaam ko bhi ye mission impossible bana deta hai. Confidence itna hai ki Google ko bhi doubt ho jaye. Par dil ka saaf hai, entertainment ki tension nahi.
+`;
+      }
+    }
+
     // ===== ENGLISH =====
     else {
       languageRule = `
@@ -289,6 +313,24 @@ Body: ...
       return {
         title: `${name} अलग ही level पर है 😂`,
         body: `${name} आसान चीज़ भी मुश्किल बना देता है. confidence पूरा आसमान पर है. कैसे manage करता है पता नहीं. लेकिन entertaining ज़रूर है.`,
+        source: "fallback",
+        model: "template",
+      };
+    }
+
+    if (language.toLowerCase() === "hinglish") {
+      if (isToast) {
+        return {
+          title: `Cheers to ${name} 🥂`,
+          body: `${name} sach mein ek awesome person hai. Iske saath rehna hamesha fun hota hai. Life mein isse saari khushiyan mile. You are the best!`,
+          source: "fallback",
+          model: "template",
+        };
+      }
+
+      return {
+        title: `${name}: Total Legend 😂`,
+        body: `${name} ka logic hi alag level ka hota hai. Simple kaam ko bhi complicate karna iski hobby hai. Confidence toh full hai par skills ka pata nahi. But entertainment pakka hai!`,
         source: "fallback",
         model: "template",
       };

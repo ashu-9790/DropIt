@@ -2,7 +2,7 @@ const logger = require("../logger");
 
 // Allowed values
 const ALLOWED_VIBES = ["Roast", "Toast"];
-const ALLOWED_LANGUAGES = ["English", "Hindi", "Marathi"];
+const ALLOWED_LANGUAGES = ["English", "Hindi", "Marathi", "Hinglish"];
 
 // Validation rules
 const VALIDATION_RULES = {

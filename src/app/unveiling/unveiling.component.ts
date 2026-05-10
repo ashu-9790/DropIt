@@ -119,6 +119,25 @@ export class UnveilingComponent implements OnInit {
       share: (vibe: string) => `हे ${vibe.toLowerCase()} शेअर करा`,
       roastLabel: 'रोस्ट',
       toastLabel: 'टोस्ट'
+    },
+    Hinglish: {
+      Roast: { 
+        title: "Aapke liye ek roast aaya hai! 👀", 
+        sub: "Dekhte hain aaj kisne aapki kheench li hai!", 
+        btn: "🎁 Message Open Karein" 
+      },
+      Toast: { 
+        title: "Kisi ne aapke baare mein kuch bohot achha likha hai! ✨", 
+        sub: "Aakhir kya likha hai? Khud hi dekh lo!", 
+        btn: "🎁 Surprise Open Karein" 
+      },
+      react: 'Emoji ke saath react karein',
+      views: 'Views',
+      shares: 'Shares',
+      makeAnother: '✨ Ek aur banayein',
+      share: (vibe: string) => `Is ${vibe.toLowerCase()} ko share karein`,
+      roastLabel: 'Roast',
+      toastLabel: 'Toast'
     }
   };
 

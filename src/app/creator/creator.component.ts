@@ -18,7 +18,7 @@ export class CreatorComponent {
 
   private readonly previewSharePath = '/view/preview';
 
-  readonly languages: Language[] = ['English', 'Hindi', 'Marathi'];
+  readonly languages: Language[] = ['English', 'Hindi', 'Marathi', 'Hinglish'];
 
   protected selectedVibe: Vibe | null = null;
   protected formVisible = false;

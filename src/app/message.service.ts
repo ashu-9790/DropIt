@@ -5,7 +5,7 @@ import { catchError, retry } from 'rxjs/operators';
 import { environment } from './config';
 
 export type Vibe = 'Roast' | 'Toast';
-export type Language = 'English' | 'Hindi' | 'Marathi';
+export type Language = 'English' | 'Hindi' | 'Marathi' | 'Hinglish';
 
 export interface GenerateMessageRequest {
   creator_name: string;
