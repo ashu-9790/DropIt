@@ -32,6 +32,7 @@ export interface MessageContent {
 export interface MessagePayload {
   vibe: Vibe;
   recipient: string;
+  language?: Language;
   content: MessageContent;
   generation?: {
     source: string;

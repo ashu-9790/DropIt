@@ -1,0 +1,129 @@
+<div class="p-4 md:p-8 space-y-6 md:space-y-8">
+    
+    <!-- Header -->
+    <div class="space-y-2">
+        <h1 class="font-script font-bold text-[3rem] leading-none">System Settings</h1>
+        <p class="font-mono text-[0.65rem] uppercase tracking-[0.3em] text-black/55">Configure system features and options</p>
+    </div>
+
+    @if (loading) {
+        <div class="flex items-center justify-center py-20">
+            <div class="h-16 w-16 animate-spin rounded-full border-4 border-black/10 border-t-black"></div>
+        </div>
+    } @else if (settings) {
+        
+        <!-- Feature Toggles -->
+        <div class="rounded-2xl border-2 border-black/15 bg-[#fefdf5]/90 p-6 shadow-[8px_8px_0_rgba(17,17,17,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[12px_12px_0_rgba(17,17,17,0.12)] hover:border-black/30 space-y-6">
+            <h2 class="font-mono text-[0.7rem] uppercase tracking-wider text-black/55">Feature Toggles</h2>
+            
+            <!-- Roast Feature -->
+            <div class="flex items-center justify-between py-4 border-b border-black/10">
+                <div>
+                    <p class="font-body text-[1rem] font-semibold">🔥 Roast Feature</p>
+                    <p class="font-mono text-[0.65rem] text-black/60 mt-1">Allow users to create roast messages</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input 
+                        type="checkbox"
+                        [(ngModel)]="settings.features.roastEnabled"
+                        (change)="toggleFeature('roast', settings.features.roastEnabled)"
+                        class="sr-only peer"
+                    />
+                    <div class="w-14 h-7 bg-black/20 peer-focus:outline-none rounded-sm peer peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-black after:border after:rounded-sm after:h-6 after:w-6 after:transition-all peer-checked:bg-black"></div>
+                </label>
+            </div>
+
+            <!-- Toast Feature -->
+            <div class="flex items-center justify-between py-4 border-b border-black/10">
+                <div>
+                    <p class="font-body text-[1rem] font-semibold">🥂 Toast Feature</p>
+                    <p class="font-mono text-[0.65rem] text-black/60 mt-1">Allow users to create toast messages</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input 
+                        type="checkbox"
+                        [(ngModel)]="settings.features.toastEnabled"
+                        (change)="toggleFeature('toast', settings.features.toastEnabled)"
+                        class="sr-only peer"
+                    />
+                    <div class="w-14 h-7 bg-black/20 peer-focus:outline-none rounded-sm peer peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-black after:border after:rounded-sm after:h-6 after:w-6 after:transition-all peer-checked:bg-black"></div>
+                </label>
+            </div>
+
+            <!-- Maintenance Mode -->
+            <div class="flex items-center justify-between py-4">
+                <div>
+                    <p class="font-body text-[1rem] font-semibold">🚧 Maintenance Mode</p>
+                    <p class="font-mono text-[0.65rem] text-black/60 mt-1">Temporarily disable the site for maintenance</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                    <input 
+                        type="checkbox"
+                        [(ngModel)]="settings.features.maintenanceMode"
+                        (change)="toggleMaintenance(settings.features.maintenanceMode)"
+                        class="sr-only peer"
+                    />
+                    <div class="w-14 h-7 bg-black/20 peer-focus:outline-none rounded-sm peer peer-checked:after:translate-x-full peer-checked:after:border-black after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-black after:border after:rounded-sm after:h-6 after:w-6 after:transition-all peer-checked:bg-red-600"></div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Cache Management -->
+        <div class="rounded-2xl border-2 border-black/15 bg-[#fefdf5]/90 p-6 shadow-[8px_8px_0_rgba(17,17,17,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[12px_12px_0_rgba(17,17,17,0.12)] hover:border-black/30 space-y-4">
+            <h2 class="font-mono text-[0.7rem] uppercase tracking-wider text-black/55">Cache Management</h2>
+            
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <p class="font-body text-[1rem] font-semibold">Clear Application Cache</p>
+                    <p class="font-mono text-[0.65rem] text-black/60 mt-1">Remove all cached data to free up memory</p>
+                </div>
+                <button 
+                    (click)="clearCache()"
+                    [disabled]="clearingCache"
+                    class="border-2 border-black bg-black px-6 py-3 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-paper hover:bg-paper hover:text-black hover:-translate-y-1 hover:shadow-[4px_4px_0_rgba(17,17,17,1)] active:translate-y-0 active:shadow-none transition-all disabled:opacity-50"
+                >
+                    @if (clearingCache) {
+                        Clearing...
+                    } @else {
+                        🗑️ Clear Cache
+                    }
+                </button>
+            </div>
+        </div>
+
+        <!-- Database Info -->
+        @if (dbInfo) {
+            <div class="rounded-2xl border-2 border-black/15 bg-[#fefdf5]/90 p-6 shadow-[8px_8px_0_rgba(17,17,17,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[12px_12px_0_rgba(17,17,17,0.12)] hover:border-black/30 space-y-4">
+                <h2 class="font-mono text-[0.7rem] uppercase tracking-wider text-black/55">Database Information</h2>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div>
+                        <p class="font-mono text-[0.6rem] uppercase tracking-wider text-black/55">Database</p>
+                        <p class="font-mono text-[1rem] font-bold mt-1">{{ dbInfo.databaseName }}</p>
+                    </div>
+                    <div>
+                        <p class="font-mono text-[0.6rem] uppercase tracking-wider text-black/55">Collections</p>
+                        <p class="font-mono text-[1rem] font-bold mt-1">{{ dbInfo.collections.length }}</p>
+                    </div>
+                    <div>
+                        <p class="font-mono text-[0.6rem] uppercase tracking-wider text-black/55">Total Records</p>
+                        <p class="font-mono text-[1rem] font-bold mt-1">{{ dbInfo.stats.objects }}</p>
+                    </div>
+                    <div>
+                        <p class="font-mono text-[0.6rem] uppercase tracking-wider text-black/55">Storage Size</p>
+                        <p class="font-mono text-[1rem] font-bold mt-1">{{ formatBytes(dbInfo.stats.totalSize) }}</p>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Success Message -->
+        @if (successMessage) {
+            <div class="rounded-lg border border-green-300 bg-green-50 px-4 py-3">
+                <p class="font-mono text-[0.65rem] text-green-800">✓ {{ successMessage }}</p>
+            </div>
+        }
+
+    }
+
+</div>

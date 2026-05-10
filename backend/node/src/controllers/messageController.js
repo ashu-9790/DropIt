@@ -153,6 +153,7 @@ function createMessageController({ model, gemini, logger, cache }) {
         data: {
           vibe: doc.vibe,
           recipient: doc.recipient_name,
+          language: doc.language || 'English',
           content: safeContent,
           generation: doc.generation,
           stats: {

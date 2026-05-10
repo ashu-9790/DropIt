@@ -14,7 +14,7 @@ class AdminSettingsService {
   async getSettings() {
     try {
       const db = this.store.db;
-      const settings = await db.collection(this.settingsCollection).findOne({ _id: "system" });
+      const settings = db ? await db.collection(this.settingsCollection).findOne({ _id: "system" }) : null;
 
       // Default settings if none exist
       const defaultSettings = {
@@ -52,6 +52,7 @@ class AdminSettingsService {
   async updateSettings(newSettings) {
     try {
       const db = this.store.db;
+      if (!db) return { success: false, error: "Database not connected" };
       
       await db.collection(this.settingsCollection).updateOne(
         { _id: "system" },
@@ -143,6 +144,7 @@ class AdminSettingsService {
   async getDatabaseInfo() {
     try {
       const db = this.store.db;
+      if (!db) return { success: false, error: "Database not connected" };
       const stats = await db.stats();
       const collections = await db.listCollections().toArray();
 

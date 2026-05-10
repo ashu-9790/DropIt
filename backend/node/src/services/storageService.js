@@ -90,6 +90,7 @@ async function createMongoStore(uri, dbName, logger) {
   logger.info(`Connected to MongoDB database '${dbName}'.`);
 
   return {
+    db,
     saveMessage: async (doc) => {
       try {
         const result = await col.insertOne(doc);
@@ -147,6 +148,7 @@ function createMemoryStore(logger) {
   logger.info("Using in-memory message store");
 
   return {
+    db: null,
     saveMessage: async (doc) => {
       map.set(doc.share_id, doc);
       return doc;

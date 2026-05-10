@@ -3,29 +3,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService, type Language, type Vibe } from '../message.service';
-import { animate, style, transition, trigger } from '@angular/animations';
+
 
 @Component({
   selector: 'app-creator',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './creator.component.html',
-  styleUrl: './creator.component.css',
-  animations: [
-    trigger('slideIn', [
-      transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(20px)' }),
-        animate('400ms cubic-bezier(0.22, 1, 0.36, 1)', 
-          style({ opacity: 1, transform: 'translateY(0)' })),
-      ]),
-    ]),
-    trigger('fadeIn', [
-      transition(':enter', [
-        style({ opacity: 0 }),
-        animate('300ms ease-in', style({ opacity: 1 })),
-      ]),
-    ]),
-  ],
+  styleUrl: './creator.component.css'
 })
 export class CreatorComponent {
   private readonly fb = inject(FormBuilder);
@@ -207,6 +192,25 @@ export class CreatorComponent {
   shareToLinkedIn(): void {
     const url = encodeURIComponent(this.shareUrl);
     window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`, '_blank');
+  }
+
+  shareToTelegram(): void {
+    const text = encodeURIComponent(`Check out this ${this.selectedVibe?.toLowerCase()} I made for you! 🎉`);
+    const url = encodeURIComponent(this.shareUrl);
+    window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
+  }
+
+  shareToInstagram(): void {
+    if (navigator.share) {
+      navigator.share({
+        title: 'DropIt',
+        text: `Check out this ${this.selectedVibe?.toLowerCase()} I made for you! 🎉`,
+        url: this.shareUrl
+      }).catch(console.error);
+    } else {
+      this.copyLink();
+      alert('Link copied! Open Instagram to paste and share in your story or messages. 📸');
+    }
   }
 
   private extractErrorMessage(error: unknown): string {

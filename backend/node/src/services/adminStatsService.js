@@ -13,6 +13,7 @@ class AdminStatsService {
   async getOverviewStats() {
     try {
       const db = this.store.db;
+      if (!db) return { success: false, error: "Database not connected" };
       const messagesCollection = db.collection("messages");
 
       // Total messages
@@ -30,14 +31,14 @@ class AdminStatsService {
         {
           $group: {
             _id: null,
-            totalViews: { $sum: "$stats.views" },
-            totalShares: { $sum: "$stats.shares" }
+            totalViews: { $sum: { $ifNull: ["$stats.views", 0] } },
+            totalShares: { $sum: { $ifNull: ["$stats.shares", 0] } }
           }
         }
       ]).toArray();
 
-      const totalViews = viewsSharesResult[0]?.totalViews || 0;
-      const totalShares = viewsSharesResult[0]?.totalShares || 0;
+      const totalViews = viewsSharesResult.length > 0 ? (viewsSharesResult[0]?.totalViews || 0) : 0;
+      const totalShares = viewsSharesResult.length > 0 ? (viewsSharesResult[0]?.totalShares || 0) : 0;
 
       // Roast vs Toast ratio
       const roastCount = await messagesCollection.countDocuments({ vibe: "Roast" });
@@ -65,12 +66,13 @@ class AdminStatsService {
           roastPercentage: totalMessages > 0 ? Math.round((roastCount / totalMessages) * 100) : 0,
           toastPercentage: totalMessages > 0 ? Math.round((toastCount / totalMessages) * 100) : 0,
           languageDistribution: languageStats.map(l => ({
-            language: l._id,
+            language: l._id || 'Unknown',
             count: l.count
           }))
         }
       };
     } catch (error) {
+      console.error('Stats error:', error);
       return { success: false, error: error.message };
     }
   }
@@ -81,6 +83,7 @@ class AdminStatsService {
   async getRecentMessages(limit = 50, skip = 0, filters = {}) {
     try {
       const db = this.store.db;
+      if (!db) return { success: false, error: "Database not connected" };
       const messagesCollection = db.collection("messages");
 
       const query = {};
@@ -122,6 +125,8 @@ class AdminStatsService {
             views: m.stats?.views || 0,
             shares: m.stats?.shares || 0,
             createdAt: m.metadata?.created_at || "",
+            creatorName: m.creator_name || "",
+            recipientName: m.recipient_name || "",
           })),
           total,
           page: Math.floor(skip / limit) + 1,
@@ -139,6 +144,7 @@ class AdminStatsService {
   async getAnalytics(days = 30) {
     try {
       const db = this.store.db;
+      if (!db) return { success: false, error: "Database not connected" };
       const messagesCollection = db.collection("messages");
 
       const startDate = new Date();
@@ -194,6 +200,7 @@ class AdminStatsService {
   async getTopMessages(type = "views", limit = 10) {
     try {
       const db = this.store.db;
+      if (!db) return { success: false, error: "Database not connected" };
       const messagesCollection = db.collection("messages");
 
       const sortField = type === "views" ? "stats.views" : "stats.shares";
@@ -214,6 +221,8 @@ class AdminStatsService {
             views: m.stats?.views || 0,
             shares: m.stats?.shares || 0,
             createdAt: m.metadata?.created_at || "",
+            creatorName: m.creator_name || "",
+            recipientName: m.recipient_name || "",
           }))
         }
       };
@@ -228,6 +237,7 @@ class AdminStatsService {
   async getPerformanceMetrics() {
     try {
       const db = this.store.db;
+      if (!db) return { success: false, error: "Database not connected" };
       const messagesCollection = db.collection("messages");
 
       // Database stats
@@ -288,6 +298,7 @@ class AdminStatsService {
   async deleteMessage(shareId) {
     try {
       const db = this.store.db;
+      if (!db) return { success: false, error: "Database not connected" };
       const messagesCollection = db.collection("messages");
 
       const result = await messagesCollection.deleteOne({ share_id: shareId });
@@ -308,6 +319,7 @@ class AdminStatsService {
   async bulkDeleteMessages(shareIds) {
     try {
       const db = this.store.db;
+      if (!db) return { success: false, error: "Database not connected" };
       const messagesCollection = db.collection("messages");
 
       const result = await messagesCollection.deleteMany({

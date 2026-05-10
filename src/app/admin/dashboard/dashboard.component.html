@@ -1,0 +1,80 @@
+<div class="h-screen bg-paper flex flex-col md:flex-row overflow-hidden relative">
+    
+    <!-- Mobile Header -->
+    <header class="md:hidden flex items-center justify-between p-4 bg-black text-paper z-20 shadow-md">
+        <h1 class="font-script font-bold text-2xl leading-none">DropIt</h1>
+        <button (click)="toggleMobileMenu()" class="p-2 -mr-2 hover:bg-white/10 rounded transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </header>
+
+    <!-- Mobile Overlay Backdrop -->
+    @if (isMobileMenuOpen) {
+        <div class="fixed inset-0 bg-black/60 z-30 md:hidden backdrop-blur-sm transition-opacity" (click)="toggleMobileMenu()"></div>
+    }
+
+    <!-- Sidebar -->
+    <aside 
+        class="fixed inset-y-0 left-0 z-40 w-64 bg-black text-paper border-r border-black/20 flex flex-col transition-transform duration-300 md:relative md:translate-x-0"
+        [class.-translate-x-full]="!isMobileMenuOpen"
+    >
+        
+        <!-- Logo -->
+        <div class="p-6 border-b border-paper/20">
+            <h1 class="font-script font-bold text-[2rem] leading-none">DropIt</h1>
+            <p class="font-mono text-[0.55rem] uppercase tracking-[0.3em] text-paper/60 mt-1">Admin Panel</p>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 p-4 space-y-1">
+            <a 
+                routerLink="/admin-dropitt/overview"
+                routerLinkActive="bg-paper/10 border-paper"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg font-mono text-[0.65rem] uppercase tracking-[0.2em] text-paper/80 hover:bg-paper/5 hover:text-paper hover:translate-x-1 transition-all border border-transparent"
+            >
+                <span>📊</span>
+                <span>Overview</span>
+            </a>
+
+            <a 
+                routerLink="/admin-dropitt/messages"
+                routerLinkActive="bg-paper/10 border-paper"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg font-mono text-[0.65rem] uppercase tracking-[0.2em] text-paper/80 hover:bg-paper/5 hover:text-paper hover:translate-x-1 transition-all border border-transparent"
+            >
+                <span>💬</span>
+                <span>Messages</span>
+            </a>
+
+            <a 
+                routerLink="/admin-dropitt/settings"
+                routerLinkActive="bg-paper/10 border-paper"
+                class="flex items-center gap-3 px-4 py-3 rounded-lg font-mono text-[0.65rem] uppercase tracking-[0.2em] text-paper/80 hover:bg-paper/5 hover:text-paper hover:translate-x-1 transition-all border border-transparent"
+            >
+                <span>⚙️</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+
+        <!-- User Info & Logout -->
+        <div class="p-4 border-t border-paper/20">
+            <div class="px-4 py-3 rounded-lg bg-paper/5 mb-3">
+                <p class="font-mono text-[0.6rem] uppercase tracking-wider text-paper/60">Logged in as</p>
+                <p class="font-mono text-[0.7rem] text-paper mt-1">{{ adminEmail }}</p>
+            </div>
+            <button 
+                (click)="logout()"
+                class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-mono text-[0.65rem] uppercase tracking-[0.2em] text-paper/80 hover:bg-red-600 hover:text-white hover:-translate-y-0.5 active:translate-y-0 transition-all border border-paper/20 hover:border-transparent"
+            >
+                <span>🚪</span>
+                <span>Logout</span>
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-auto">
+        <router-outlet></router-outlet>
+    </main>
+
+</div>

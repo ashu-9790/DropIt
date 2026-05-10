@@ -1,0 +1,88 @@
+<main class="min-h-screen bg-paper text-black flex items-center justify-center px-6 py-16">
+    <div class="w-full max-w-md space-y-8" [@fadeIn]>
+        
+        <!-- Logo/Header -->
+        <div class="text-center space-y-4">
+            <h1 class="font-script font-bold text-[2.5rem] md:text-[3.5rem] leading-none tracking-tight">
+                DropIt
+            </h1>
+            <p class="font-mono text-[0.65rem] uppercase tracking-[0.34em] text-black/55">
+                Admin Portal
+            </p>
+        </div>
+
+        <!-- Login Form -->
+        <div class="rounded-[2rem] border-2 border-black/15 bg-[#fefdf5]/90 px-6 py-8 md:px-8 md:py-10 shadow-[12px_12px_0_rgba(17,17,17,0.08)]">
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+                
+                <div class="space-y-2">
+                    <label class="block font-mono text-[0.65rem] uppercase tracking-[0.24em] text-black/55">
+                        Email Address
+                    </label>
+                    <input 
+                        type="email" 
+                        formControlName="email"
+                        class="w-full border border-black/25 bg-paper/70 px-4 py-3 font-body text-base outline-none transition placeholder:text-black/30 focus:border-black focus:bg-white/70"
+                        placeholder="admin@dropitt.me"
+                        [class.border-red-500]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+                    />
+                    @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+                        <p class="font-mono text-[0.6rem] text-red-600 mt-1">Valid email is required</p>
+                    }
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block font-mono text-[0.65rem] uppercase tracking-[0.24em] text-black/55">
+                        Password
+                    </label>
+                    <input 
+                        type="password" 
+                        formControlName="password"
+                        class="w-full border border-black/25 bg-paper/70 px-4 py-3 font-body text-base outline-none transition placeholder:text-black/30 focus:border-black focus:bg-white/70"
+                        placeholder="Enter your password"
+                        [class.border-red-500]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                    />
+                    @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+                        <p class="font-mono text-[0.6rem] text-red-600 mt-1">Password is required</p>
+                    }
+                </div>
+
+                @if (errorMessage) {
+                    <div class="rounded-lg border border-red-300 bg-red-50 px-4 py-3">
+                        <p class="font-mono text-[0.65rem] text-red-800">{{ errorMessage }}</p>
+                    </div>
+                }
+
+                <button 
+                    type="submit"
+                    class="w-full border-2 border-black bg-black px-7 py-4 font-mono text-[0.68rem] uppercase tracking-[0.28em] text-paper transition-all duration-200 hover:-translate-y-1 hover:shadow-[4px_4px_0_rgba(17,17,17,1)] hover:bg-paper hover:text-black active:translate-y-0 active:shadow-none disabled:translate-y-0 disabled:shadow-none disabled:cursor-not-allowed disabled:bg-black/40"
+                    [disabled]="loginForm.invalid || loading"
+                >
+                    @if (loading) {
+                        <span class="inline-flex items-center gap-2">
+                            <svg class="h-4 w-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Signing In...
+                        </span>
+                    } @else {
+                        🔐 Sign In
+                    }
+                </button>
+
+            </form>
+        </div>
+
+        <!-- Back to Home -->
+        <div class="text-center">
+            <a 
+                routerLink="/create"
+                class="font-mono text-[0.65rem] uppercase tracking-[0.24em] text-black/60 underline decoration-black/30 underline-offset-4 transition hover:text-black"
+            >
+                ← Back to Home
+            </a>
+        </div>
+
+    </div>
+</main>

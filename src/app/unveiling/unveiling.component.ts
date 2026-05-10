@@ -3,7 +3,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { animate, style, transition, trigger, state } from '@angular/animations';
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService, type Vibe } from '../message.service';
+import { MessageService, type Language, type Vibe } from '../message.service';
 
 @Component({
   selector: 'app-unveiling',
@@ -58,6 +58,86 @@ export class UnveilingComponent implements OnInit {
   protected showConfetti = false;
   protected selectedReaction: string | null = null;
   protected reactions = ['😂', '🔥', '💀', '😭', '👏', '❤️'];
+  protected currentLanguage: Language = 'English';
+
+  private readonly translations = {
+    English: {
+      Roast: { 
+        title: "You've received a roast! 👀", 
+        sub: "Let's see what they actually think about you.", 
+        btn: "🎁 Open the Message" 
+      },
+      Toast: { 
+        title: "Someone wrote something nice about you! ✨", 
+        sub: "What exactly did they say? Open and see!", 
+        btn: "🎁 Open the Surprise" 
+      },
+      react: 'React with an emoji',
+      views: 'Views',
+      shares: 'Shares',
+      makeAnother: '✨ Make Another',
+      share: (vibe: string) => `Share this ${vibe.toLowerCase()}`,
+      roastLabel: 'Roast',
+      toastLabel: 'Toast'
+    },
+    Hindi: {
+      Roast: { 
+        title: "आपके लिए एक रोस्ट आया है! 👀", 
+        sub: "देखते हैं आज किसने आपकी फिरकी ली है!", 
+        btn: "🎁 मेसेज खोलें" 
+      },
+      Toast: { 
+        title: "किसी ने आपके बारे में कुछ बहुत अच्छा लिखा है! ✨", 
+        sub: "आखिर क्या लिखा है? खुद ही खोलकर देख लीजिए!", 
+        btn: "🎁 सरप्राइज खोलें" 
+      },
+      react: 'इमोजी के साथ प्रतिक्रिया दें',
+      views: 'Views',
+      shares: 'Shares',
+      makeAnother: '✨ एक और बनाएँ',
+      share: (vibe: string) => `इस ${vibe.toLowerCase()} को साझा करें`,
+      roastLabel: 'रोस्ट',
+      toastLabel: 'टोस्ट'
+    },
+    Marathi: {
+      Roast: { 
+        title: "कुणीतरी तुमची चांगलीच खेचलीये! 😜", 
+        sub: "आत काय लिहिलंय याचा विचार करून घाबरण्यापेक्षा...", 
+        btn: "🤷‍♂️ जाऊदे, वाचूनच टाका!" 
+      },
+      Toast: { 
+        title: "तुमच्याबद्दल कुणीतरी काहीतरी छान लिहिलंय! ✨", 
+        sub: "नक्की काय लिहिलंय? उघडूनच बघा!", 
+        btn: "🎁 सरप्राईज उघडा" 
+      },
+      react: 'इमोजीसह प्रतिक्रिया द्या',
+      views: 'Views',
+      shares: 'Shares',
+      makeAnother: '✨ आणखी एक बनवा',
+      share: (vibe: string) => `हे ${vibe.toLowerCase()} शेअर करा`,
+      roastLabel: 'रोस्ट',
+      toastLabel: 'टोस्ट'
+    }
+  };
+
+  get t() {
+    return (this.translations[this.currentLanguage] || this.translations.English) as any;
+  }
+
+  get localizedContent() {
+    return this.t[this.vibe] || this.t.Roast;
+  }
+
+  get localizedVibe(): string {
+    return this.vibe === 'Roast' ? this.t.roastLabel : this.t.toastLabel;
+  }
+
+  get titleClass(): string {
+    const isEnglish = this.currentLanguage === 'English';
+    return isEnglish 
+      ? 'font-script font-bold text-[3.5rem] leading-[1] tracking-tight sm:text-[5rem] md:text-[6.5rem]' 
+      : 'font-heading font-extrabold text-[2.5rem] leading-[1.2] tracking-normal sm:text-[3.5rem] md:text-[4.5rem]';
+  }
 
   ngOnInit(): void {
     const shareId = this.route.snapshot.paramMap.get('id');
@@ -88,6 +168,7 @@ export class UnveilingComponent implements OnInit {
         this.vibe = response.data.vibe;
         this.title = response.data.content.title;
         this.body = response.data.content.body;
+        this.currentLanguage = response.data.language || 'English';
         this.stats = response.data.stats || null;
       },
       error: (error: unknown) => {
@@ -136,6 +217,12 @@ export class UnveilingComponent implements OnInit {
     const text = encodeURIComponent(`Just received an epic ${this.vibe.toLowerCase()}! 🔥`);
     const url = encodeURIComponent(window.location.href);
     window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+  }
+  
+  shareToTelegram(): void {
+    const text = encodeURIComponent(`Just received an epic ${this.vibe.toLowerCase()}! 🔥`);
+    const url = encodeURIComponent(window.location.href);
+    window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
   }
   
   shareToInstagram(): void {
