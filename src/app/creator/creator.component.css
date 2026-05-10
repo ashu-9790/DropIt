@@ -1,3 +1,44 @@
 :host {
   display: block;
 }
+
+:host {
+  display: block;
+}
+
+/* Custom Dropdown Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInFromBottom {
+  from { transform: translateY(10px); }
+  to { transform: translateY(0); }
+}
+
+.animate-in {
+  animation-fill-mode: both;
+}
+
+.fade-in {
+  animation-name: fadeIn;
+}
+
+.slide-in-from-bottom-2 {
+  animation-name: slideInFromBottom;
+}
+
+.duration-200 {
+  animation-duration: 200ms;
+}
+
+.selected {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Ensure placeholder contrast */
+::placeholder {
+  color: rgba(17, 17, 17, 0.45) !important;
+  opacity: 1;
+}

@@ -42,6 +42,19 @@ export class CreatorComponent implements OnInit {
   protected roastEnabled = true;
   protected toastEnabled = true;
 
+  // Custom Dropdown State
+  protected isLanguageMenuOpen = false;
+
+  toggleLanguageMenu(): void {
+    if (this.generating) return;
+    this.isLanguageMenuOpen = !this.isLanguageMenuOpen;
+  }
+
+  selectLanguage(lang: Language): void {
+    this.form.patchValue({ language: lang });
+    this.isLanguageMenuOpen = false;
+  }
+
   get quirksPlaceholder(): string {
     if (this.selectedVibe === 'Toast') {
       return "What makes them awesome? Mention their achievements, why you're proud of them, or a sweet memory. The more heart you put in, the better the AI gets!";

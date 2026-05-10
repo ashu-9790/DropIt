@@ -156,7 +156,7 @@
                     <h1 class="font-script font-bold text-[4rem] leading-[0.9] tracking-tight sm:text-[5.5rem] md:text-[7rem]">
                         DropIt
                     </h1>
-                    <p class="font-mono text-[0.68rem] uppercase tracking-[0.34em] text-black/60">
+                    <p class="font-mono text-[0.68rem] uppercase tracking-[0.34em] text-black/75">
                         drop vibes, spark reactions
                     </p>
                 </div>
@@ -191,7 +191,7 @@
             <!-- How it works section -->
             <div class="pt-16 pb-12 space-y-16 border-t border-black/10 mt-16">
                 <div class="text-center space-y-4" data-aos="fade-up">
-                    <p class="font-mono text-[0.65rem] uppercase tracking-[0.34em] text-black/55">How it works</p>
+                    <p class="font-mono text-[0.65rem] uppercase tracking-[0.34em] text-black/75">How it works</p>
                     <h2 class="font-heading font-bold text-3xl sm:text-4xl text-balance">3 Steps to Viral Vibes</h2>
                 </div>
 
@@ -219,7 +219,7 @@
                 </div>
 
                 <div class="flex flex-col items-center gap-6 pt-12 border-t border-black/10 w-full max-w-3xl mx-auto" data-aos="fade-up" data-aos-offset="-50">
-                    <p class="font-mono text-[0.7rem] uppercase tracking-wider text-black/55 text-center">Ready to drop a vibe?</p>
+                    <p class="font-mono text-[0.7rem] uppercase tracking-wider text-black/75 text-center">Ready to drop a vibe?</p>
                     <div class="flex flex-col sm:flex-row justify-center gap-4 w-full">
                         <button type="button" class="relative w-full sm:w-auto border border-black bg-black px-7 py-4 font-mono text-[0.68rem] uppercase tracking-[0.28em] text-paper transition duration-200 hover:-translate-y-0.5 hover:bg-transparent hover:text-black disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale disabled:hover:translate-y-0" [disabled]="!roastEnabled" (click)="beginDraft('Roast')">
                             🔥 Roast Someone
@@ -242,9 +242,9 @@
                 <div class="rounded-[2rem] border border-black/20 bg-[#fefdf5]/80 px-5 py-5 shadow-[10px_10px_0_rgba(17,17,17,0.08)] backdrop-blur-[1px] transition-all duration-300 hover:shadow-[12px_12px_0_rgba(17,17,17,0.12)] sm:px-8 sm:py-8">
                     <div class="space-y-8">
                         <div class="space-y-3 text-center">
-                            <p class="font-mono text-[0.65rem] uppercase tracking-[0.34em] text-black/55">Vibe selected</p>
+                            <p class="font-mono text-[0.65rem] uppercase tracking-[0.34em] text-black/90">Vibe selected</p>
                             <p class="font-script font-semibold text-4xl leading-none">{{ selectedVibe }}</p>
-                            <p class="mx-auto max-w-xl font-mono text-[0.7rem] uppercase tracking-[0.24em] text-black/45">
+                            <p class="mx-auto max-w-xl font-mono text-[0.7rem] uppercase tracking-[0.24em] text-black/85">
                                 A short briefing gives the message enough texture to feel specific.
                             </p>
                         </div>
@@ -252,37 +252,57 @@
                         <fieldset [disabled]="generating" class="space-y-8">
                             <div class="grid gap-5 md:grid-cols-2">
                                 <label class="space-y-2">
-                                    <span class="block font-mono text-[0.65rem] uppercase tracking-[0.24em] text-black/55">Creator Name</span>
+                                    <span class="block font-mono text-[0.65rem] uppercase tracking-[0.24em] text-black/90">Creator Name</span>
                                     <input type="text" formControlName="creatorName" autocomplete="off"
-                                        class="w-full border border-black/25 bg-paper/70 px-4 py-4 font-body text-base outline-none transition placeholder:text-black/30 focus:border-black focus:bg-white/70 focus:shadow-[0_0_0_3px_rgba(17,17,17,0.05)]"
+                                        class="w-full border border-black/40 bg-paper/70 px-4 py-4 font-body text-base outline-none transition placeholder:text-black/60 focus:border-black focus:bg-white/70 focus:shadow-[0_0_0_3px_rgba(17,17,17,0.05)]"
                                         placeholder="Your name" />
                                 </label>
 
                                 <label class="space-y-2">
-                                    <span class="block font-mono text-[0.65rem] uppercase tracking-[0.24em] text-black/55">Who is this for?</span>
+                                    <span class="block font-mono text-[0.65rem] uppercase tracking-[0.24em] text-black/90">Who is this for?</span>
                                     <input type="text" formControlName="recipientName" autocomplete="off"
-                                        class="w-full border border-black/25 bg-paper/70 px-4 py-4 font-body text-base outline-none transition placeholder:text-black/30 focus:border-black focus:bg-white/70 focus:shadow-[0_0_0_3px_rgba(17,17,17,0.05)]"
+                                        class="w-full border border-black/40 bg-paper/70 px-4 py-4 font-body text-base outline-none transition placeholder:text-black/60 focus:border-black focus:bg-white/70 focus:shadow-[0_0_0_3px_rgba(17,17,17,0.05)]"
                                         placeholder="Friend's name or nickname" />
                                 </label>
                             </div>
 
                             <label class="space-y-2">
-                                <span class="block font-mono text-[0.65rem] uppercase tracking-[0.24em] text-black/55">Tell us about them...</span>
+                                <span class="block font-mono text-[0.65rem] uppercase tracking-[0.24em] text-black/90">Tell us about them...</span>
                                 <textarea rows="7" formControlName="quirks"
-                                    class="w-full resize-y border border-black/25 bg-paper/70 px-4 py-4 font-body text-base leading-7 outline-none transition placeholder:text-black/30 focus:border-black focus:bg-white/70 focus:shadow-[0_0_0_3px_rgba(17,17,17,0.05)]"
+                                    class="w-full resize-y border border-black/40 bg-paper/70 px-4 py-4 font-body text-base leading-7 outline-none transition placeholder:text-black/60 focus:border-black focus:bg-white/70 focus:shadow-[0_0_0_3px_rgba(17,17,17,0.05)]"
                                     [placeholder]="quirksPlaceholder"></textarea>
                             </label>
 
                             <div class="grid gap-5 md:grid-cols-[1fr_auto] md:items-end">
-                                <label class="space-y-2">
-                                    <span class="block font-mono text-[0.65rem] uppercase tracking-[0.24em] text-black/55">Language</span>
-                                    <select formControlName="language"
-                                        class="w-full border border-black/25 bg-paper/70 px-4 py-4 font-body text-base outline-none transition focus:border-black focus:bg-white/70 focus:shadow-[0_0_0_3px_rgba(17,17,17,0.05)]">
-                                        @for (language of languages; track language) {
-                                        <option [value]="language">{{ language }}</option>
+                                <div class="space-y-2 relative">
+                                    <span class="block font-mono text-[0.65rem] uppercase tracking-[0.24em] text-black/90">Choose Language</span>
+                                
+                                    <!-- Custom Dropdown Trigger -->
+                                    <div class="relative">
+                                        <button type="button" (click)="toggleLanguageMenu()"
+                                            class="flex w-full items-center justify-between border border-black/30 bg-paper/70 px-4 py-4 font-body text-base outline-none transition hover:border-black focus:border-black focus:bg-white/70">
+                                            <span>{{ form.get('language')?.value }}</span>
+                                            <svg class="h-5 w-5 transition-transform duration-200" [class.rotate-180]="isLanguageMenuOpen" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                        </button>
+                                
+                                        <!-- Custom Dropdown Menu -->
+                                        @if (isLanguageMenuOpen) {
+                                        <div
+                                            class="absolute bottom-full left-0 z-50 mb-2 w-full border-2 border-black bg-white shadow-[8px_8px_0_rgba(0,0,0,0.1)] animate-in fade-in slide-in-from-bottom-2 duration-200">
+                                            @for (language of languages; track language) {
+                                            <button type="button" (click)="selectLanguage(language)"
+                                                class="flex w-full items-center px-4 py-3 text-left font-body text-base transition-colors hover:bg-black hover:text-white"
+                                                [class.selected]="form.get('language')?.value === language">
+                                                {{ language }}
+                                            </button>
+                                            }
+                                        </div>
                                         }
-                                    </select>
-                                </label>
+                                        </div>
+                                        </div>
 
                                 <button type="submit"
                                     class="min-w-[14rem] border border-black bg-black px-7 py-4 font-mono text-[0.68rem] uppercase tracking-[0.28em] text-paper transition duration-200 hover:-translate-y-0.5 hover:bg-transparent hover:text-black disabled:translate-y-0 disabled:cursor-not-allowed disabled:bg-black/40 disabled:text-paper/80"
