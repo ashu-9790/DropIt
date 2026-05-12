@@ -53,11 +53,23 @@ export class CreatorComponent implements OnInit {
 
   // Custom Dropdown State
   protected isLanguageMenuOpen = false;
+  protected isToneMenuOpen = false;
+
+  readonly roastTones = ['Funny', 'Soft roast', 'Savage', 'Gen-Z', 'Sarcastic'];
+  readonly toastTones = ['Heartfelt', 'Funny', 'Deep', 'Casual'];
+
+  get currentTones(): string[] {
+    return this.selectedVibe === 'Toast' ? this.toastTones : this.roastTones;
+  }
 
   // Feedback Carousel State
   @ViewChild('feedbackGrid') feedbackGrid!: ElementRef<HTMLDivElement>;
   protected currentFeedbackIndex = 0;
   protected showScrollTop = false;
+
+  // Speech Recognition State
+  protected isListening = false;
+  private recognition: any;
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
@@ -88,6 +100,7 @@ export class CreatorComponent implements OnInit {
   toggleLanguageMenu(): void {
     if (this.generating) return;
     this.isLanguageMenuOpen = !this.isLanguageMenuOpen;
+    this.isToneMenuOpen = false;
   }
 
   selectLanguage(lang: Language): void {
@@ -95,11 +108,76 @@ export class CreatorComponent implements OnInit {
     this.isLanguageMenuOpen = false;
   }
 
+  toggleToneMenu(): void {
+    if (this.generating) return;
+    this.isToneMenuOpen = !this.isToneMenuOpen;
+    this.isLanguageMenuOpen = false;
+  }
+
+  selectTone(tone: string): void {
+    this.form.patchValue({ tone: tone });
+    this.isToneMenuOpen = false;
+  }
+
   get quirksPlaceholder(): string {
     if (this.selectedVibe === 'Toast') {
       return "What makes them awesome? Mention their achievements, why you're proud of them, or a sweet memory. The more heart you put in, the better the AI gets!";
     }
     return "Their habits, inside jokes, secret chaos, or soft spots. The more 'tea' you spill, the better the AI gets!";
+  }
+
+  toggleListening() {
+    if (this.isListening) {
+      this.stopListening();
+    } else {
+      this.startListening();
+    }
+  }
+
+  private startListening() {
+    const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+    if (!SpeechRecognition) {
+      alert('Your browser does not support speech recognition. Please try Chrome or Edge.');
+      return;
+    }
+
+    this.recognition = new SpeechRecognition();
+    this.recognition.continuous = false;
+    this.recognition.interimResults = false;
+
+    // Map selected language to Speech API locale
+    const lang = this.form.get('language')?.value;
+    if (lang === 'Marathi') this.recognition.lang = 'mr-IN';
+    else if (lang === 'Hindi') this.recognition.lang = 'hi-IN';
+    else this.recognition.lang = 'en-US';
+
+    this.recognition.onstart = () => {
+      this.isListening = true;
+    };
+
+    this.recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      const currentVal = this.form.get('quirks')?.value || '';
+      this.form.patchValue({ quirks: currentVal + (currentVal ? ' ' : '') + transcript });
+    };
+
+    this.recognition.onerror = (event: any) => {
+      console.error('Speech recognition error', event.error);
+      this.stopListening();
+    };
+
+    this.recognition.onend = () => {
+      this.isListening = false;
+    };
+
+    this.recognition.start();
+  }
+
+  private stopListening() {
+    if (this.recognition) {
+      this.recognition.stop();
+    }
+    this.isListening = false;
   }
 
   readonly form = this.fb.nonNullable.group({
@@ -110,6 +188,7 @@ export class CreatorComponent implements OnInit {
       'English',
       Validators.required,
     ),
+    tone: ['Funny', Validators.required]
   });
 
   readonly feedbackForm = this.fb.nonNullable.group({
@@ -171,6 +250,7 @@ export class CreatorComponent implements OnInit {
       recipientName: '',
       quirks: '',
       language: 'English',
+      tone: vibe === 'Roast' ? 'Funny' : 'Heartfelt'
     });
   }
 
@@ -189,6 +269,7 @@ export class CreatorComponent implements OnInit {
       recipientName: '',
       quirks: '',
       language: 'English',
+      tone: 'Funny'
     });
   }
 
@@ -201,6 +282,12 @@ export class CreatorComponent implements OnInit {
     this.generating = true;
     this.errorMessage = '';
     this.copyStatus = 'idle';
+    
+    // Switch to preview mode immediately to show skeleton
+    this.showPreview = true;
+    this.formVisible = false;
+    this.previewTitle = '';
+    this.previewBody = '';
 
     const payload = {
       creator_name: this.form.controls.creatorName.value.trim(),
@@ -208,6 +295,7 @@ export class CreatorComponent implements OnInit {
       quirks: this.form.controls.quirks.value.trim(),
       vibe: this.selectedVibe,
       language: this.form.controls.language.value,
+      tone: this.form.get('tone')?.value || 'Savage'
     };
 
     this.messageService.generateMessage(payload).subscribe({
@@ -233,10 +321,9 @@ export class CreatorComponent implements OnInit {
               this.previewTitle = msgResponse.data.content.title;
               this.previewBody = msgResponse.data.content.body;
               console.log('Setting showPreview = true');
-              this.showPreview = true;
-              this.formVisible = false;
+              this.previewTitle = msgResponse.data.content.title;
+              this.previewBody = msgResponse.data.content.body;
             } else {
-              console.log('Message response not valid, using preview link');
               this.usePreviewShareLink();
             }
           },
@@ -249,8 +336,9 @@ export class CreatorComponent implements OnInit {
       error: (error: unknown) => {
         console.error('Generate error:', error);
         this.generating = false;
-        this.errorMessage = `${this.extractErrorMessage(error)} Showing a preview link for now.`;
-        this.usePreviewShareLink();
+        this.showPreview = false;
+        this.formVisible = true;
+        this.errorMessage = `${this.extractErrorMessage(error)}`;
       },
     });
   }

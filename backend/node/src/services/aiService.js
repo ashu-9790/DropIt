@@ -50,6 +50,7 @@ Rules:
 7. Toast should feel warm and genuine.
 8. Minimum 5-6 complete and detailed sentences.
 9. Output ONLY this format:
+10. Use a moderate/medium level of relevant emojis naturally throughout the Body text. Let the context decide the exact amount, but keep it expressive and lively.
 
 Title: ...
 Body: ...
@@ -109,13 +110,22 @@ Use everyday Marathi people actually speak.
 Avoid formal Marathi completely.
 Use natural friendly words.
 If roast, use funny "tomne" like close friends teasing each other.
+Vary the title style—don't always use "[Name] साठी खास". Use different patterns like "आपल्या [Name] बद्दल...", "एक अवलिया: [Name]", etc.
 `;
 
       if (isToast) {
         examples = `
-Example:
-Title: राहुलसाठी खास 🥂
-Body: राहुल खरंच खूप छान माणूस आहे. त्याच्या सोबत वेळ कसा जातो कळतच नाही. तो जिथे असतो तिथे नेहमी positive vibe असते. आयुष्यात त्याला खूप आनंद आणि यश मिळो.
+Example 1:
+Title: आपल्या सानिका बद्दल थोडंसं... ❤️
+Body: सानिका, तुझा स्वभाव खरंच खूप भारी आहे. ❤️ तू सगळ्यांशी इतक्या प्रेमाने बोलतेस की कोणालाही तुझं वेड लागेल. तुझ्या मनात कोणाबद्दलच काही वाईट नसतं. ✨
+
+Example 2:
+Title: सानिका: एका गोड व्यक्तीसाठी 🥂
+Body: सानिका सोबत वेळ कसा जातो कळतच नाही. ती जिथे असते तिथे नेहमी positive ऊर्जा असते. 🌟 सानिका सारखी मैत्रीण मिळणं खरंच नशिबाची गोष्ट आहे. 🙌
+
+Example 3:
+Title: सानिका साठी एक Cheers! 🌟
+Body: सानिका, तू नेहमी दुसऱ्यांचा विचार आधी करतेस आणि ते बघून खूप छान वाटतं. ✨ तू अशीच राहा आणि तुला आयुष्यात खूप सारा आनंद आणि यश मिळो. 🥂
 `;
       } else {
         examples = `
@@ -285,7 +295,7 @@ Body: ...
     if (language.toLowerCase() === "marathi") {
       if (isToast) {
         return {
-          title: `${name} साठी खास 🥂`,
+          title: `आपल्या ${name} बद्दल थोडंसं... ❤️`,
           body: `${name} खरंच खूप छान व्यक्ती आहे. त्याच्या आसपास असलं की वातावरणच चांगलं होतं. नेहमी असाच आनंदी राहा. आयुष्यात खूप यश मिळो.`,
           source: "fallback",
           model: "template",
