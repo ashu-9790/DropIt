@@ -2,11 +2,13 @@ const express = require("express");
 const router = express.Router();
 const { createMessageController } = require("../controllers/messageController");
 const { createMessageModel } = require("../models/messageModel");
+const { createFeedbackController } = require("../controllers/feedbackController");
 const { validateGenerateRequest, validateShareId } = require("../middleware/validation");
 
 function createRoutes({ store, gemini, logger, rateLimiter, cache, adminSettingsService }) {
   const model = createMessageModel(store);
   const controller = createMessageController({ model, gemini, logger, cache, adminSettingsService });
+  const feedbackController = createFeedbackController({ store, logger });
 
   // Health check
   router.get("/health", async (req, res) => {
@@ -53,6 +55,10 @@ function createRoutes({ store, gemini, logger, rateLimiter, cache, adminSettings
 
   // Get stats endpoint
   router.get("/stats", controller.getStats);
+
+  // Feedback endpoints
+  router.post("/feedback", rateLimiter, feedbackController.submitFeedback);
+  router.get("/feedback/recent", feedbackController.getRecentFeedback);
 
   return router;
 }

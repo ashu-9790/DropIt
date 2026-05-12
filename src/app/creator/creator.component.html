@@ -144,6 +144,14 @@
                         Create Another
                     </button>
                 </div>
+
+                <div class="pt-4 text-center">
+                    <button type="button"
+                        (click)="openFeedbackModal()"
+                        class="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-black/40 underline decoration-black/20 underline-offset-4 transition hover:text-black">
+                        Enjoyed DropIt? Share your experience
+                    </button>
+                </div>
             </div>
         </div>
         }
@@ -226,25 +234,68 @@
                         <p class="font-body text-[0.95rem] text-black/70 leading-relaxed">Our AI crafts a perfect message in <strong class="text-black">English, Hindi, Marathi, or Hinglish</strong>. Copy the link and drop it!</p>
                     </div>
                 </div>
+            </div>
 
-                <div class="flex flex-col items-center gap-6 pt-12 border-t border-black/10 w-full max-w-3xl mx-auto" data-aos="fade-up" data-aos-offset="-50">
-                    <p class="font-mono text-[0.7rem] uppercase tracking-wider text-black/75 text-center">Ready to drop a vibe?</p>
-                    <div class="flex flex-col sm:flex-row justify-center gap-4 w-full">
-                        <button type="button" class="relative w-full sm:w-auto border border-black bg-black px-7 py-4 font-mono text-[0.68rem] uppercase tracking-[0.28em] text-paper transition duration-200 hover:-translate-y-0.5 hover:bg-transparent hover:text-black disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale disabled:hover:translate-y-0" [disabled]="!roastEnabled" (click)="beginDraft('Roast')">
-                            🔥 Roast Someone
-                            @if (!roastEnabled) {
-                                <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-black text-[0.5rem] px-2 py-1 rounded-full text-white border border-white/20 whitespace-nowrap">MAINTENANCE</span>
-                            }
-                        </button>
-                        <button type="button" class="relative w-full sm:w-auto border border-black bg-transparent px-7 py-4 font-mono text-[0.68rem] uppercase tracking-[0.28em] text-black transition duration-200 hover:-translate-y-0.5 hover:bg-black hover:text-paper disabled:opacity-50 disabled:cursor-not-allowed disabled:grayscale disabled:hover:translate-y-0" [disabled]="!toastEnabled" (click)="beginDraft('Toast')">
-                            🥂 Toast Someone
-                            @if (!toastEnabled) {
-                                <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-black text-[0.5rem] px-2 py-1 rounded-full text-white border border-white/20 whitespace-nowrap">MAINTENANCE</span>
-                            }
-                        </button>
+            <!-- User Feedback Section -->
+            @if (recentFeedbacks.length > 0) {
+            <div class="pt-24 pb-16 space-y-12 border-t border-black/10 mt-16 w-full max-w-5xl" data-aos="fade-up">
+                <div class="text-center space-y-4">
+                    <p class="font-mono text-[0.65rem] uppercase tracking-[0.34em] text-black/75">User Experiences</p>
+                    <h2 class="font-heading font-bold text-3xl sm:text-4xl text-balance">
+                        <span class="reveal-text">Real Vibes from Real People</span>
+                        <span class="floating-emoji">✨</span>
+                        <span class="floating-emoji">💬</span>
+                    </h2>
+                </div>
+
+                <div class="feedback-container">
+                    <div class="feedback-grid" #feedbackGrid (scroll)="onFeedbackScroll($event)">
+                        @for (feedback of recentFeedbacks; track feedback._id) {
+                        <div class="feedback-card" data-aos="fade-up" [attr.data-aos-delay]="$index * 100">
+                            <div class="feedback-header">
+                                <div class="user-avatar">
+                                    {{ feedback.name.substring(0, 1).toUpperCase() }}
+                                </div>
+                                <span class="verified-badge">Vibe Verified</span>
+                            </div>
+
+                            <div class="rating-stars">
+                                @for (star of getRatingStars(feedback.rating); track $index) {
+                                    <span>{{ star }}</span>
+                                }
+                            </div>
+
+                            <p class="feedback-comment">{{ feedback.comment }}</p>
+                            
+                            <div class="feedback-author">
+                                {{ feedback.name }}
+                            </div>
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Pagination Dots -->
+                    <div class="feedback-dots">
+                        @for (feedback of recentFeedbacks; track $index) {
+                        <button type="button" 
+                            class="dot" 
+                            [class.active]="currentFeedbackIndex === $index"
+                            (click)="currentFeedbackIndex = $index; scrollFeedback('right')" 
+                            aria-label="Go to slide"></button>
+                        }
                     </div>
                 </div>
+
+                <div class="flex justify-center pt-8">
+                    <button type="button" 
+                        (click)="openFeedbackModal()"
+                        class="group flex items-center gap-3 border-2 border-black bg-white px-8 py-4 font-mono text-[0.7rem] uppercase tracking-[0.2em] transition-all hover:bg-black hover:text-white hover:shadow-[8px_8px_0_rgba(0,0,0,0.1)]">
+                        <span>Share your experience</span>
+                        <span class="transition-transform group-hover:translate-x-1">→</span>
+                    </button>
+                </div>
             </div>
+            }
 
             } @else {
             <form class="mx-auto w-full max-w-3xl text-left" [formGroup]="form" (ngSubmit)="submit()" data-aos="fade-up">
@@ -349,4 +400,70 @@
         </div>
         }
     </section>
+
+    <!-- Scroll to Top Button -->
+    @if (showScrollTop) {
+    <button type="button" (click)="scrollToTop()" class="scroll-top-btn animate-in fade-in slide-in-from-bottom-2 duration-300" aria-label="Scroll to top">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7" />
+        </svg>
+    </button>
+    }
+
+    <!-- Feedback Modal -->
+    @if (feedbackVisible) {
+    <div class="modal-overlay" (click)="closeFeedbackModal()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+            <button type="button" (click)="closeFeedbackModal()" class="absolute top-6 right-6 text-2xl hover:scale-110 transition-transform">&times;</button>
+            
+            @if (!feedbackSuccess) {
+            <div class="space-y-6">
+                <div class="space-y-2">
+                    <p class="font-mono text-[0.6rem] uppercase tracking-widest text-black/50">Feedback</p>
+                    <h2 class="font-heading font-bold text-3xl">Share your vibe</h2>
+                </div>
+
+                <form [formGroup]="feedbackForm" (ngSubmit)="submitFeedback()" class="space-y-6">
+                    <div class="space-y-4">
+                        <label class="block space-y-2">
+                            <span class="font-mono text-[0.65rem] uppercase tracking-widest">Name</span>
+                            <input type="text" formControlName="name" class="w-full border-b-2 border-black bg-transparent py-2 outline-none focus:border-black/40 transition-colors font-body text-lg" placeholder="How should we call you?">
+                        </label>
+
+                        <div class="space-y-2">
+                            <span class="font-mono text-[0.65rem] uppercase tracking-widest">Rating</span>
+                            <div class="rating-input">
+                                @for (star of [1,2,3,4,5]; track star) {
+                                <button type="button" (click)="feedbackForm.patchValue({rating: star})" [class.active]="feedbackForm.get('rating')?.value! >= star" class="star-btn">
+                                    ★
+                                </button>
+                                }
+                            </div>
+                        </div>
+
+                        <label class="block space-y-2">
+                            <span class="font-mono text-[0.65rem] uppercase tracking-widest">Experience</span>
+                            <textarea formControlName="comment" rows="4" class="w-full border-2 border-black bg-white/50 p-4 outline-none focus:bg-white transition-colors font-body text-base" placeholder="What's on your mind?"></textarea>
+                        </label>
+                    </div>
+
+                    @if (feedbackError) {
+                        <p class="font-mono text-[0.6rem] uppercase text-red-500">{{ feedbackError }}</p>
+                    }
+
+                    <button type="submit" [disabled]="feedbackSubmitting" class="w-full bg-black text-white py-4 font-mono text-[0.7rem] uppercase tracking-[0.2em] hover:bg-black/80 transition-colors disabled:opacity-50">
+                        {{ feedbackSubmitting ? 'Sending...' : 'Drop Feedback' }}
+                    </button>
+                </form>
+            </div>
+            } @else {
+            <div class="text-center py-10 space-y-4">
+                <div class="success-check">✓</div>
+                <h3 class="font-heading font-bold text-2xl">Thanks for the love!</h3>
+                <p class="font-body text-black/60">Your feedback keeps the vibes flowing.</p>
+            </div>
+            }
+        </div>
+    </div>
+    }
 </main>

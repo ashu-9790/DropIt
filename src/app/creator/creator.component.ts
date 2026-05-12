@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Title, Meta } from '@angular/platform-browser';
 import { MessageService, type Language, type Vibe } from '../message.service';
+import { FeedbackService, type Feedback } from '../services/feedback.service';
 
 
 @Component({
@@ -16,6 +17,7 @@ import { MessageService, type Language, type Vibe } from '../message.service';
 export class CreatorComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly messageService = inject(MessageService);
+  private readonly feedbackService = inject(FeedbackService);
   private readonly titleService = inject(Title);
   private readonly metaService = inject(Meta);
 
@@ -42,8 +44,46 @@ export class CreatorComponent implements OnInit {
   protected roastEnabled = true;
   protected toastEnabled = true;
 
+  // Feedback State
+  protected recentFeedbacks: Feedback[] = [];
+  protected feedbackVisible = false;
+  protected feedbackSubmitting = false;
+  protected feedbackError = '';
+  protected feedbackSuccess = false;
+
   // Custom Dropdown State
   protected isLanguageMenuOpen = false;
+
+  // Feedback Carousel State
+  @ViewChild('feedbackGrid') feedbackGrid!: ElementRef<HTMLDivElement>;
+  protected currentFeedbackIndex = 0;
+  protected showScrollTop = false;
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.showScrollTop = window.pageYOffset > 400;
+  }
+
+  onFeedbackScroll(event: Event) {
+    const element = event.target as HTMLDivElement;
+    const scrollLeft = element.scrollLeft;
+    const width = element.offsetWidth;
+    this.currentFeedbackIndex = Math.round(scrollLeft / width);
+  }
+
+  scrollFeedback(direction: 'left' | 'right') {
+    if (!this.feedbackGrid) return;
+    const element = this.feedbackGrid.nativeElement;
+    const scrollAmount = element.offsetWidth * 0.8;
+    element.scrollBy({
+      left: direction === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth'
+    });
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   toggleLanguageMenu(): void {
     if (this.generating) return;
@@ -72,6 +112,12 @@ export class CreatorComponent implements OnInit {
     ),
   });
 
+  readonly feedbackForm = this.fb.nonNullable.group({
+    name: ['', [Validators.required, Validators.maxLength(50)]],
+    rating: [5, [Validators.required, Validators.min(1), Validators.max(5)]],
+    comment: ['', [Validators.required, Validators.maxLength(500)]]
+  });
+
   ngOnInit() {
     this.titleService.setTitle('DropIt - Create a Personalized Roast or Toast');
     this.metaService.updateTag({ 
@@ -79,6 +125,20 @@ export class CreatorComponent implements OnInit {
       content: 'Use our AI to craft the perfect roast or toast for your friends in English, Hindi, Marathi, or Hinglish. Spread vibes and spark reactions!' 
     });
     this.checkFeatureStatus();
+    this.loadRecentFeedback();
+  }
+
+  loadRecentFeedback() {
+    this.feedbackService.getRecentFeedback(5).subscribe({
+      next: (response) => {
+        if (response.success && Array.isArray(response.data)) {
+          this.recentFeedbacks = response.data;
+        }
+      },
+      error: () => {
+        // Silent fail for feedback loading
+      }
+    });
   }
 
   checkFeatureStatus() {
@@ -284,5 +344,58 @@ export class CreatorComponent implements OnInit {
     this.sharePath = this.previewSharePath;
     this.shareUrl = `${window.location.origin}${this.sharePath}`;
     this.formVisible = false;
+  }
+
+  // Feedback Methods
+  openFeedbackModal() {
+    this.feedbackVisible = true;
+    this.feedbackSuccess = false;
+    this.feedbackError = '';
+    this.feedbackForm.reset({
+      name: '',
+      rating: 5,
+      comment: ''
+    });
+  }
+
+  closeFeedbackModal() {
+    this.feedbackVisible = false;
+  }
+
+  submitFeedback() {
+    if (this.feedbackForm.invalid || this.feedbackSubmitting) {
+      this.feedbackForm.markAllAsTouched();
+      return;
+    }
+
+    this.feedbackSubmitting = true;
+    this.feedbackError = '';
+
+    const payload = this.feedbackForm.getRawValue();
+
+    this.feedbackService.submitFeedback(payload).subscribe({
+      next: (response) => {
+        this.feedbackSubmitting = false;
+        if (response.success) {
+          this.feedbackSuccess = true;
+          this.loadRecentFeedback();
+          setTimeout(() => this.closeFeedbackModal(), 2000);
+        } else {
+          this.feedbackError = response.error || 'Failed to submit feedback';
+        }
+      },
+      error: (err) => {
+        this.feedbackSubmitting = false;
+        this.feedbackError = err.message || 'An error occurred';
+      }
+    });
+  }
+
+  getRatingStars(rating: number): string[] {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(i <= rating ? '★' : '☆');
+    }
+    return stars;
   }
 }

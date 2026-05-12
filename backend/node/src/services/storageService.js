@@ -13,11 +13,13 @@ async function createMongoStore(uri, dbName, logger) {
   await client.connect();
   const db = client.db(dbName);
   const col = db.collection("messages");
+  const feedbackCol = db.collection("feedback");
 
   // Create indexes for better query performance
   try {
     await col.createIndex({ share_id: 1 }, { unique: true });
-    logger.info("Created index on share_id");
+    await feedbackCol.createIndex({ created_at: -1 });
+    logger.info("Created indexes on messages and feedback");
   } catch (err) {
     if (err.code !== 11000 && !err.message.includes("already exists")) {
       logger.warn(`Failed to create share_id index: ${err.message}`);
@@ -138,6 +140,27 @@ async function createMongoStore(uri, dbName, logger) {
         },
       ]).toArray();
       return stats[0] || { totalMessages: 0, totalViews: 0, totalShares: 0 };
+    },
+    saveFeedback: async (doc) => {
+      try {
+        const result = await feedbackCol.insertOne(doc);
+        return { ...doc, _id: result.insertedId };
+      } catch (err) {
+        logger.error(`Error saving feedback: ${err.message}`);
+        throw err;
+      }
+    },
+    getRecentFeedback: async (limit = 5) => {
+      try {
+        return await feedbackCol
+          .find({})
+          .sort({ created_at: -1 })
+          .limit(limit)
+          .toArray();
+      } catch (err) {
+        logger.error(`Error getting recent feedback: ${err.message}`);
+        throw err;
+      }
     },
     close: async () => client.close(),
   };
