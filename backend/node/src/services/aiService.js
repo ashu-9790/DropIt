@@ -51,6 +51,8 @@ Rules:
 8. Minimum 5-6 complete and detailed sentences.
 9. Output ONLY this format:
 10. Use a moderate/medium level of relevant emojis naturally throughout the Body text. Let the context decide the exact amount, but keep it expressive and lively.
+11. STRICT SAFETY: Never use profanity, abuse, slurs, or offensive language. 
+12. If the user provides toxic or abusive input, IGNORE the toxicity and transform it into playful, harmless teasing. Always keep it "clean" and friendly.
 
 Title: ...
 Body: ...
@@ -242,6 +244,7 @@ Requirements:
 - relatable
 - friendly teasing
 - not offensive
+- STRICTLY NO profanity or abuse
 - minimum 5-6 full sentences
 
 ${examples}
