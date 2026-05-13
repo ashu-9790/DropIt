@@ -198,10 +198,10 @@ export class CreatorComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.titleService.setTitle('DropIt - Create a Personalized Roast or Toast');
+    this.titleService.setTitle('DropIt | Best AI Roast & Toast Generator | Funny Marathi & Hindi Roasts');
     this.metaService.updateTag({ 
       name: 'description', 
-      content: 'Use our AI to craft the perfect roast or toast for your friends in English, Hindi, Marathi, or Hinglish. Spread vibes and spark reactions!' 
+      content: 'DropIt is the #1 AI Roast and Toast Generator. Create funny, savage roasts or heartfelt toasts for friends in Marathi, Hindi, English, and Hinglish. Perfect for WhatsApp, Instagram, and more!' 
     });
     this.checkFeatureStatus();
     this.loadRecentFeedback();
