@@ -30,7 +30,8 @@
               "node_modules/aos/dist/aos.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": ["aos"]
           },
           "configurations": {
             "production": {

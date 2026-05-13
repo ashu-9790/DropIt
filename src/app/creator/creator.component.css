@@ -2,11 +2,6 @@
   display: block;
 }
 
-:host {
-  display: block;
-}
-
-/* Custom Dropdown Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -37,13 +32,11 @@
   background-color: rgba(0, 0, 0, 0.05);
 }
 
-/* Ensure placeholder contrast */
 ::placeholder {
   color: rgba(17, 17, 17, 0.45) !important;
   opacity: 1;
 }
 
-/* Feedback Section Styles */
 .feedback-container {
   position: relative;
   width: 100%;
@@ -78,8 +71,8 @@
 }
 
 .feedback-card {
-  background: white;
-  border: 2px solid #111111;
+  background: #fff;
+  border: 2px solid #111;
   padding: 2.5rem 2rem;
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
@@ -88,19 +81,13 @@
   box-shadow: 12px 12px 0 rgba(17, 17, 17, 0.05);
 }
 
-.feedback-card:hover {
-  transform: translate(-4px, -4px);
-  box-shadow: 20px 20px 0 rgba(17, 17, 17, 0.08);
-}
-
-/* Navigation Buttons */
 .carousel-nav {
   display: flex;
   width: 2.25rem;
   height: 2.25rem;
-  background: #111111;
-  color: white;
-  border: 1px solid #111111;
+  background: #111;
+  color: #fff;
+  border: 1px solid #111;
   border-radius: 50%;
   align-items: center;
   justify-content: center;
@@ -115,7 +102,6 @@
   background: #333333;
 }
 
-/* Pagination Dots */
 .feedback-dots {
   display: none;
   justify-content: center;
@@ -132,7 +118,7 @@
 .dot {
   width: 0.5rem;
   height: 0.5rem;
-  border: 1px solid #111111;
+  border: 1px solid #111;
   border-radius: 50%;
   transition: all 0.3s ease;
   padding: 0;
@@ -140,11 +126,10 @@
 }
 
 .dot.active {
-  background: #111111;
+  background: #111;
   transform: scale(1.4);
 }
 
-/* Text Effects */
 .reveal-text {
   display: inline-block;
   clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
@@ -169,20 +154,6 @@
   100% { transform: translateY(0px) rotate(0deg); }
 }
 
-.dot {
-  width: 0.5rem;
-  height: 0.5rem;
-  border: 1px solid #111111;
-  border-radius: 50%;
-  transition: all 0.3s ease;
-  padding: 0;
-  background: transparent;
-}
-
-.dot.active {
-  background: #111111;
-  transform: scale(1.4);
-}
 
 .swipe-hint {
   display: none;
@@ -223,7 +194,7 @@
   left: 0;
   width: 100%;
   height: 4px;
-  background: #111111;
+  background: #111;
   transform: scaleX(0);
   transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   transform-origin: left;
@@ -251,8 +222,8 @@
 .user-avatar {
   width: 3rem;
   height: 3rem;
-  background: #111111;
-  color: white;
+  background: #111;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -266,7 +237,7 @@
   font-size: 0.55rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #111111;
+  color: #111;
   background: rgba(17, 17, 17, 0.05);
   padding: 0.25rem 0.6rem;
   border-radius: 2rem;
@@ -285,7 +256,7 @@
   font-family: var(--font-heading);
   font-size: 1.15rem;
   line-height: 1.4;
-  color: #111111;
+  color: #111;
   margin-bottom: 2rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -296,7 +267,7 @@
   font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.3em;
-  color: #111111;
+  color: #111;
   font-weight: 800;
   display: flex;
   align-items: center;
@@ -307,20 +278,19 @@
   content: '';
   width: 1.5rem;
   height: 1px;
-  background: #111111;
+  background: #111;
   opacity: 0.3;
 }
 
-/* Scroll to top button */
 .scroll-top-btn {
   position: fixed;
   bottom: 1.5rem;
   right: 1.5rem;
   width: 2.75rem;
   height: 2.75rem;
-  background: #111111;
-  color: white;
-  border: 1px solid #111111;
+  background: #111;
+  color: #fff;
+  border: 1px solid #111;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -341,12 +311,11 @@
 
 .scroll-top-btn:hover {
   transform: translateY(-5px);
-  background: white;
-  color: #111111;
+  background: #fff;
+  color: #111;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
 }
 
-/* Modal Styles */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -362,7 +331,7 @@
 
 .modal-content {
   background: #fefdf5;
-  border: 2px solid #111111;
+  border: 2px solid #111;
   width: 100%;
   max-width: 500px;
   padding: 2.5rem;
@@ -397,13 +366,12 @@
   transform: scale(1.2);
 }
 
-/* Success Animation */
 .success-check {
   width: 60px;
   height: 60px;
   border-radius: 50%;
   background: #111;
-  color: white;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -417,7 +385,6 @@
   to { transform: scale(1); }
 }
 
-/* Skeleton Loading */
 .skeleton {
   background: #f0f0f0;
   border-radius: 4px;
@@ -470,7 +437,6 @@
   margin-right: auto;
 }
 
-/* Voice to Text */
 .mic-btn {
   position: absolute;
   right: 1rem;
@@ -479,7 +445,7 @@
   height: 2.75rem;
   border-radius: 50%;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  background: white;
+  background: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -507,7 +473,6 @@
   100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
 }
 
-/* Result Card Themes */
 .result-card-base {
   border-radius: 2rem;
   border-width: 2px;
