@@ -34,7 +34,6 @@
 
 ::placeholder {
   color: rgba(17, 17, 17, 0.45) !important;
-  opacity: 1;
 }
 
 .feedback-container {
@@ -201,11 +200,9 @@
 }
 
 .feedback-card:hover {
-  transform: translateY(-12px) scale(1.02);
-  box-shadow: 
-    0 30px 60px -12px rgba(0, 0, 0, 0.12),
-    0 18px 36px -18px rgba(0, 0, 0, 0.08);
-  border-color: rgba(17, 17, 17, 0.15);
+  transform: translateY(-8px) scale(1.01);
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+  border-color: rgba(17,17,17,0.1);
 }
 
 .feedback-card:hover::after {
