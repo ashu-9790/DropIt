@@ -506,3 +506,78 @@
   70% { box-shadow: 0 0 0 10px rgba(0, 0, 0, 0); }
   100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
 }
+
+/* Result Card Themes */
+.result-card-base {
+  border-radius: 2rem;
+  border-width: 2px;
+  padding: 2rem;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .result-card-base {
+    padding: 2.5rem;
+  }
+}
+
+/* 1. Charred (Savage Roast) */
+.theme-charred {
+  background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%) !important;
+  border-color: #333 !important;
+  color: #fefdf5 !important;
+  box-shadow: 20px 20px 0 rgba(0, 0, 0, 0.2) !important;
+}
+.theme-charred .skeleton { background: rgba(255, 255, 255, 0.05); }
+.theme-charred h2 { color: #fff !important; }
+.theme-charred p { color: rgba(255, 255, 255, 0.8) !important; }
+.theme-charred .btn-primary { 
+  background: #fff !important; 
+  color: #000 !important; 
+  border-color: #fff !important;
+}
+.theme-charred .font-mono.text-black\/50 { 
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.6) !important; 
+}
+
+/* 2. Playful (Funny/Soft Roast) */
+.theme-playful {
+  background: linear-gradient(135deg, #fff9e6 0%, #fff1cc 100%) !important;
+  border-color: #fbc02d !important;
+  color: #3e2723 !important;
+  box-shadow: 15px 15px 0 rgba(251, 192, 45, 0.15) !important;
+}
+.theme-playful .btn-primary { 
+  background: #3e2723 !important; 
+  color: #fff !important; 
+  border-color: #3e2723 !important;
+}
+
+/* 3. Warm (Heartfelt/Deep Toast) */
+.theme-warm {
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe4e6 100%) !important;
+  border-color: #fb7185 !important;
+  color: #4c0519 !important;
+  box-shadow: 15px 15px 0 rgba(251, 113, 133, 0.15) !important;
+}
+.theme-warm .btn-primary { 
+  background: #4c0519 !important; 
+  color: #fff !important; 
+  border-color: #4c0519 !important;
+}
+
+/* 4. Fresh (Casual Toast) */
+.theme-fresh {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%) !important;
+  border-color: #4ade80 !important;
+  color: #052e16 !important;
+  box-shadow: 15px 15px 0 rgba(74, 222, 128, 0.15) !important;
+}
+.theme-fresh .btn-primary { 
+  background: #052e16 !important; 
+  color: #fff !important; 
+  border-color: #052e16 !important;
+}

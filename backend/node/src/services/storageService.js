@@ -66,6 +66,7 @@ async function createMongoStore(uri, dbName, logger) {
           properties: {
             share_id: { bsonType: "string" },
             vibe: { enum: ["Roast", "Toast"] },
+            tone: { bsonType: "string" },
             language: { enum: ["English", "Hindi", "Marathi"] },
             content: {
               bsonType: "object",

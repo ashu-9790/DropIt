@@ -62,6 +62,19 @@ export class CreatorComponent implements OnInit {
     return this.selectedVibe === 'Toast' ? this.toastTones : this.roastTones;
   }
 
+  // Theme State
+  get resultThemeClass(): string {
+    if (this.selectedVibe === 'Roast') {
+      const tone = this.form.get('tone')?.value;
+      if (tone === 'Savage' || tone === 'Sarcastic') return 'theme-charred';
+      return 'theme-playful';
+    } else {
+      const tone = this.form.get('tone')?.value;
+      if (tone === 'Heartfelt' || tone === 'Deep') return 'theme-warm';
+      return 'theme-fresh';
+    }
+  }
+
   // Feedback Carousel State
   @ViewChild('feedbackGrid') feedbackGrid!: ElementRef<HTMLDivElement>;
   protected currentFeedbackIndex = 0;

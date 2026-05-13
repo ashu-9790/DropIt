@@ -19,6 +19,7 @@ class AIService {
       recipient = "",
       language = "English",
       tone = "funny",
+      context = "",
     } = {},
     retry = 0
   ) {
@@ -27,6 +28,7 @@ class AIService {
       recipient,
       language,
       tone,
+      context,
     });
 
     if (!this.apiKey) {
@@ -38,7 +40,7 @@ class AIService {
       const model = this.genAI.getGenerativeModel({ 
         model: this.model,
         systemInstruction: `
-You are an expert writer for funny roasts and heartfelt toasts.
+You are a top-tier stand-up comedian specialized in roast battles. Your humor is sharp, clever, and highly relatable.
 
 Rules:
 1. Use VERY SIMPLE language.
@@ -46,13 +48,18 @@ Rules:
 3. Sound like close friends talking.
 4. Hindi should be casual spoken Hindi.
 5. Marathi should be casual spoken Marathi.
-6. Roast should be funny, playful, and relatable.
+6. Roast should be cleverly savage, using unexpected punchlines and funny observations.
 7. Toast should feel warm and genuine.
 8. Minimum 5-6 complete and detailed sentences.
 9. Output ONLY this format:
 10. Use a moderate/medium level of relevant emojis naturally throughout the Body text. Let the context decide the exact amount, but keep it expressive and lively.
 11. STRICT SAFETY: Never use profanity, abuse, slurs, or offensive language. 
 12. If the user provides toxic or abusive input, IGNORE the toxicity and transform it into playful, harmless teasing. Always keep it "clean" and friendly.
+13. COMEDY RULE: Use funny analogies (e.g., "His dance moves look like a glitching Wi-Fi router").
+14. COMEDY RULE: Exaggerate the quirks for comedic effect.
+15. COMEDY RULE: Each sentence should build up to a punchline. Avoid being repetitive.
+16. COMEDY RULE: Use specific, relatable details rather than generic statements.
+17. STRICT SAVAGE POLICY: NEVER add a positive twist, wholesome ending, or emotional closure. No "but we love you anyway" or "our group is incomplete without you." Any sentimental ending is a FAILURE of the task. Stay 100% savage until the very last word.
 
 Title: ...
 Body: ...
@@ -84,6 +91,7 @@ Body: ...
             recipient,
             language,
             tone,
+            context,
           },
           retry + 1
         );
@@ -96,7 +104,7 @@ Body: ...
     }
   }
 
-  _buildPrompt({ vibe, recipient, language, tone }) {
+  _buildPrompt({ vibe, recipient, language, tone, context }) {
     const name = recipient || "someone";
     const isToast = vibe.toLowerCase().includes("toast");
     const lang = language.toLowerCase();
@@ -216,11 +224,13 @@ Write a heartfelt casual toast for ${name}.
 ${languageRule}
 
 Tone: ${tone}
+Context/Quirks: ${context}
 
 Requirements:
 - warm
 - simple
 - genuine
+- MUST include details from the Context provided
 - minimum 5-6 full sentences
 
 ${examples}
@@ -237,14 +247,19 @@ Write a funny roast for ${name}.
 ${languageRule}
 
 Tone: ${tone}
+Context/Quirks: ${context}
 
 Requirements:
-- funny
-- playful
-- relatable
-- friendly teasing
-- not offensive
+- cleverly funny
+- focus on unexpected punchlines
+- use sharp analogies
+- MUST use at least 2-3 specific details from the Context provided
+- use the context to tear them apart cleverly
+- RELATABLE AND SHARP
 - STRICTLY NO profanity or abuse
+- NEVER add a sweet, wholesome, or emotional ending.
+- NO "but we love you anyway" or "best friend" talk.
+- THE ROAST MUST END ON A SHARP PUNCHLINE.
 - minimum 5-6 full sentences
 
 ${examples}

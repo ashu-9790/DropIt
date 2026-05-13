@@ -18,6 +18,7 @@ export interface AdminStats {
 export interface Message {
   shareId: string;
   vibe: string;
+  tone: string;
   language: string;
   title: string;
   views: number;

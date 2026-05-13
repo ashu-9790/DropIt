@@ -134,6 +134,7 @@ class AdminStatsService {
           messages: messages.map(m => ({
             shareId: m.share_id,
             vibe: m.vibe,
+            tone: m.tone || "",
             language: m.language,
             title: m.content?.title || "",
             views: m.view_count || 0,
@@ -247,6 +248,7 @@ class AdminStatsService {
           messages: topMessages.map(m => ({
             shareId: m.share_id,
             vibe: m.vibe,
+            tone: m.tone || "",
             title: m.content?.title || "",
             views: m.total_views || 0,
             shares: m.total_shares || 0,

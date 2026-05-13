@@ -79,6 +79,7 @@
                             </th>
                             <th class="py-4 px-4 text-left font-mono text-[0.6rem] uppercase tracking-wider text-black/55">Title</th>
                             <th class="py-4 px-4 text-left font-mono text-[0.6rem] uppercase tracking-wider text-black/55">Vibe</th>
+                            <th class="py-4 px-4 text-left font-mono text-[0.6rem] uppercase tracking-wider text-black/55">Tone</th>
                             <th class="py-4 px-4 text-left font-mono text-[0.6rem] uppercase tracking-wider text-black/55">Creator</th>
                             <th class="py-4 px-4 text-left font-mono text-[0.6rem] uppercase tracking-wider text-black/55">Recipient</th>
                             <th class="py-4 px-4 text-left font-mono text-[0.6rem] uppercase tracking-wider text-black/55">Language</th>
@@ -107,6 +108,7 @@
                                         {{ msg.vibe }}
                                     </span>
                                 </td>
+                                <td class="py-3 px-4 font-mono text-[0.7rem]">{{ msg.tone || '-' }}</td>
                                 <td class="py-3 px-4 font-body text-[0.75rem]">{{ msg.creatorName || '-' }}</td>
                                 <td class="py-3 px-4 font-body text-[0.75rem]">{{ msg.recipientName || '-' }}</td>
                                 <td class="py-3 px-4 font-mono text-[0.7rem]">{{ msg.language }}</td>

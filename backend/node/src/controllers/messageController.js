@@ -89,18 +89,21 @@ function createMessageController({ model, gemini, logger, cache, adminSettingsSe
       const recipient_name = payload.recipient_name || "";
       const language = payload.language || "English";
       const quirks = payload.quirks || "";
+      const tone = payload.tone || (vibe === 'Roast' ? 'Funny' : 'Heartfelt');
 
       const generation = await gemini.generate({
         vibe,
         recipient: recipient_name,
         language,
-        tone: quirks,
+        tone: tone,
+        context: quirks,
       });
       const share_id = makeShareId();
 
       const record = {
         share_id,
         vibe,
+        tone,
         creator_name,
         recipient_name,
         language,
