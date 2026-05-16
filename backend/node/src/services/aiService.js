@@ -260,7 +260,7 @@ Requirements:
 - NEVER add a sweet, wholesome, or emotional ending.
 - NO "but we love you anyway" or "best friend" talk.
 - THE ROAST MUST END ON A SHARP PUNCHLINE.
-- minimum 5-6 full sentences
+- minimum 3-4 full sentences
 
 ${examples}
 
