@@ -199,6 +199,11 @@ Body: Rahul bhai ka level hi alag hai. Simple se kaam ko bhi ye mission impossib
       languageRule = `
 Write in simple everyday English.
 No difficult vocabulary.
+IMPORTANT:
+If Context/Quirks contains Hindi or Marathi written in English letters
+(Roman script), understand it as Hindi/Marathi meaning.
+But final output must still be in simple English because selected language is English.
+Do not copy Roman Hindi/Marathi directly unless it sounds natural.
 `;
 
       if (isToast) {
