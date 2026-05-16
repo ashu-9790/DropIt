@@ -50,7 +50,7 @@ Rules:
 5. Marathi should be casual spoken Marathi.
 6. Roast should be cleverly savage, using unexpected punchlines and funny observations.
 7. Toast should feel warm and genuine.
-8. Minimum 5-6 complete and detailed sentences.
+8. Minimum 3-4 complete and detailed sentences.
 9. Output ONLY this format:
 10. Use a moderate/medium level of relevant emojis naturally throughout the Body text. Let the context decide the exact amount, but keep it expressive and lively.
 11. STRICT SAFETY: Never use profanity, abuse, slurs, or offensive language. 
