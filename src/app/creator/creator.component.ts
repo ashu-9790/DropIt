@@ -301,6 +301,7 @@ export class CreatorComponent implements OnInit {
     this.formVisible = false;
     this.previewTitle = '';
     this.previewBody = '';
+    window.scrollTo(0, 0);
 
     const payload = {
       creator_name: this.form.controls.creatorName.value.trim(),
@@ -361,11 +362,13 @@ export class CreatorComponent implements OnInit {
     this.shareUrl = `${window.location.origin}${this.sharePath}`;
     this.showPreview = false;
     this.showSocialShare = true;
+    window.scrollTo(0, 0);
   }
   
   regenerate(): void {
     this.showPreview = false;
     this.formVisible = true;
+    window.scrollTo(0, 0);
   }
 
   async copyLink(): Promise<void> {
