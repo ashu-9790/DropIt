@@ -231,7 +231,7 @@ Requirements:
 - simple
 - genuine
 - MUST include details from the Context provided
-- minimum 5-6 full sentences
+- minimum 3-4 full sentences
 
 ${examples}
 
