@@ -211,10 +211,10 @@ export class CreatorComponent implements OnInit {
   });
 
   ngOnInit() {
-    this.titleService.setTitle('Dropitt | Best AI Roast & Toast Generator | Funny Marathi & Hindi Roasts');
+    this.titleService.setTitle('DropItt | Best AI Roast & Toast Generator | Funny Marathi & Hindi Roasts');
     this.metaService.updateTag({ 
       name: 'description', 
-      content: 'Dropitt is the #1 AI Roast and Toast Generator. Create funny, savage roasts or heartfelt toasts for friends in Marathi, Hindi, English, and Hinglish. Perfect for WhatsApp, Instagram, and more!' 
+      content: 'DropItt is the #1 AI Roast and Toast Generator. Create funny, savage roasts or heartfelt toasts for friends in Marathi, Hindi, English, and Hinglish. Perfect for WhatsApp, Instagram, and more!' 
     });
     this.checkFeatureStatus();
     this.loadRecentFeedback();
@@ -418,7 +418,7 @@ export class CreatorComponent implements OnInit {
   shareToInstagram(): void {
     if (navigator.share) {
       navigator.share({
-        title: 'Dropitt',
+        title: 'DropItt',
         text: `Check out this ${this.selectedVibe?.toLowerCase()} I made for you! 🎉`,
         url: this.shareUrl
       }).catch(console.error);
