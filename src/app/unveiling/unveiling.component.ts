@@ -198,8 +198,8 @@ export class UnveilingComponent implements OnInit {
         // Update SEO Tags
         const recipient = response.data.recipient || 'you';
         const pageTitle = this.vibe === 'Toast' 
-          ? `✨ A sweet Toast for ${recipient} | DropIt` 
-          : `🔥 An epic Roast for ${recipient} | DropIt`;
+          ? `✨ A sweet Toast for ${recipient} | Dropitt` 
+          : `🔥 An epic Roast for ${recipient} | Dropitt`;
         
         this.titleService.setTitle(pageTitle);
         this.metaService.updateTag({ 
@@ -209,7 +209,7 @@ export class UnveilingComponent implements OnInit {
         
         // OpenGraph tags for better social sharing
         this.metaService.updateTag({ property: 'og:title', content: pageTitle });
-        this.metaService.updateTag({ property: 'og:description', content: `Unveil this personalized ${this.vibe.toLowerCase()} on DropIt.` });
+        this.metaService.updateTag({ property: 'og:description', content: `Unveil this personalized ${this.vibe.toLowerCase()} on Dropitt.` });
         this.metaService.updateTag({ property: 'og:type', content: 'website' });
       },
       error: (error: unknown) => {

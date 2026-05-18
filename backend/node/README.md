@@ -1,6 +1,6 @@
-# DropIt Backend
+# Dropitt Backend
 
-Node.js backend for DropIt - Express + MongoDB + Google Gemini AI
+Node.js backend for Dropitt - Express + MongoDB + Google Gemini AI
 
 ## Deployment on Render
 
