@@ -17,7 +17,7 @@ const cfg = {
     process.env.LOG_FILE ||
     path.resolve(__dirname, "..", "..", "dropit-node.log"),
   RATE_LIMIT_WINDOW_MS: parseInt(process.env.RATE_LIMIT_WINDOW_MS || "900000", 10), // 15 min
-  RATE_LIMIT_MAX_REQUESTS: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || "100", 10),
+  RATE_LIMIT_MAX_REQUESTS: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || "20", 10),
   REQUEST_TIMEOUT_MS: parseInt(process.env.REQUEST_TIMEOUT_MS || "30000", 10), // 30 sec
   MONGO_POOL_SIZE: parseInt(process.env.MONGO_POOL_SIZE || "10", 10),
   CACHE_TTL_SECONDS: parseInt(process.env.CACHE_TTL_SECONDS || "3600", 10), // 1 hour
