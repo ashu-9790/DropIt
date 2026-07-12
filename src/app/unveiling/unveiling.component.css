@@ -65,3 +65,18 @@
     opacity: 0;
   }
 }
+
+/* Direct Pointing Bounce Animation */
+@keyframes strike-bounce {
+  0%, 100% {
+    transform: translate(-50%, -25%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translate(-50%, 20%);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+.animate-strike-bounce {
+  animation: strike-bounce 1.5s infinite;
+}

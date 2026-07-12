@@ -133,7 +133,16 @@
 
             <!-- Reveal Button -->
             @if (!revealOpen) {
-            <div class="pt-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="pt-16 relative flex justify-center w-full" data-aos="fade-up" data-aos-delay="200">
+                
+                <!-- Direct Pointing Arrow -->
+                <div class="absolute top-2 left-1/2 -translate-x-1/2 pointer-events-none z-20 flex flex-col items-center animate-strike-bounce">
+                    <span class="font-mono text-[0.65rem] font-bold uppercase tracking-[0.2em] text-black mb-1">Click This</span>
+                    <svg class="w-10 h-10 text-black drop-shadow-md" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                    </svg>
+                </div>
+
                 <button
                     type="button"
                     class="group relative overflow-hidden border-4 border-black bg-black px-12 py-6 font-mono font-extrabold text-lg sm:text-xl uppercase tracking-widest text-white transition-all duration-300 hover:-translate-y-2 hover:bg-white hover:text-black hover:shadow-[16px_16px_0_rgba(17,17,17,1)] active:translate-y-0 active:shadow-none"
