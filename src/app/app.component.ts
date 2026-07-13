@@ -24,7 +24,7 @@ export class AppComponent {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
-      this.isAdminRoute = event.url.includes('admin-dropitt');
+      this.isAdminRoute = event.url.includes('admin');
       setTimeout(() => AOS.refresh(), 100);
     });
   }
