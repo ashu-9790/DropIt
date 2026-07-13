@@ -27,20 +27,20 @@ async function createMongoStore(uri, dbName, logger) {
   }
 
   try {
-    // Check if TTL index exists with different options
+    // Check if TTL index exists with expiration and remove it
     const indexes = await col.indexes();
     const existingTTL = indexes.find(idx => idx.name === "created_at_1");
     
-    if (existingTTL && !existingTTL.expireAfterSeconds) {
-      // Drop and recreate with TTL
+    if (existingTTL && existingTTL.expireAfterSeconds !== undefined) {
+      // Drop the TTL index and recreate as regular index so messages are kept forever
       await col.dropIndex("created_at_1");
-      await col.createIndex({ created_at: 1 }, { expireAfterSeconds: 2592000 });
-      logger.info("Created TTL index on created_at (30 days)");
+      await col.createIndex({ created_at: 1 });
+      logger.info("Replaced TTL index with regular index on created_at (messages now kept forever)");
     } else if (!existingTTL) {
-      await col.createIndex({ created_at: 1 }, { expireAfterSeconds: 2592000 });
-      logger.info("Created TTL index on created_at (30 days)");
+      await col.createIndex({ created_at: 1 });
+      logger.info("Created regular index on created_at (messages kept forever)");
     } else {
-      logger.debug("TTL index on created_at already exists");
+      logger.debug("Regular index on created_at already exists");
     }
   } catch (err) {
     logger.warn(`TTL index note: ${err.message}`);
