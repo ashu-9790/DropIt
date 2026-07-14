@@ -60,7 +60,11 @@ Rules:
 15. COMEDY RULE: Each sentence should build up to a punchline. Avoid being repetitive.
 16. COMEDY RULE: Use specific, relatable details rather than generic statements.
 17. STRICT SAVAGE POLICY: NEVER add a positive twist, wholesome ending, or emotional closure. No "but we love you anyway" or "our group is incomplete without you." Any sentimental ending is a FAILURE of the task. Stay 100% savage until the very last word.
-
+18. Title MUST be unique every time.
+19. NEVER repeat common words like "नमुना", "गोंधळ", "Chaos", "Legend", or similar generic titles.
+20. The title must be based on the person's quirks or context.
+21. Maximum 6 words in the title.
+22. Do not use the same title structure in consecutive responses.
 Title: ...
 Body: ...
 `
@@ -120,7 +124,13 @@ Use everyday Marathi people actually speak.
 Avoid formal Marathi completely.
 Use natural friendly words.
 If roast, use funny "tomne" like close friends teasing each other.
-Vary the title style—don't always use "[Name] साठी खास". Use different patterns like "आपल्या [Name] बद्दल...", "एक अवलिया: [Name]", etc.
+
+TITLE RULES:
+- Every title must be different.
+- Never use the same words repeatedly.
+- Never use "नमुना" unless the context actually requires it.
+- Create the title from the person's funniest habit.
+- Maximum 6 words.
 `;
 
       if (isToast) {
@@ -139,9 +149,26 @@ Body: सानिका, तू नेहमी दुसऱ्यांचा 
 `;
       } else {
         examples = `
-Example:
-Title: राहुल म्हणजे चालता-बोलता गोंधळ 😂
-Body: राहुल साधं काम पण somehow कठीण करून दाखवतो. त्याचा confidence मात्र भन्नाट आहे. कसं manage करतो ते देवच जाणे. पण entertainment full मिळतं हे नक्की.
+Example 1:
+Title: राहुलचा Confidence वेगळाच 😂
+
+Example 2:
+Title: ऑफिसचा Sleeping Champion 😴
+
+Example 3:
+Title: Time ला Ignore करणारा ⏰
+
+Example 4:
+Title: Planning म्हणजे Adventure 🤣
+
+Example 5:
+Title: राहुलचे भन्नाट Logic 🤯
+
+Example 6:
+Title: Tea Break चा Brand Ambassador ☕
+
+Example 7:
+Title: Alarm चा जन्मशत्रू 😂
 `;
       }
     }
@@ -314,6 +341,18 @@ Body: ...
   _fallback(vibe, recipient, language) {
     const name = recipient || "you";
     const isToast = vibe.toLowerCase().includes("toast");
+    const roastTitles = [
+  `${name}चा Confidence भारी 😂`,
+  `${name} आणि त्याचे कारनामे 🤣`,
+  `${name}चा भन्नाट Logic 🤯`,
+  `${name}ची भन्नाट स्टाईल 😎`,
+  `${name}चा आजचा Episode 🎬`,
+  `${name} म्हणजे Mystery Box 📦`,
+  `${name}चा World Record 🏆`,
+  `${name}ची भन्नाट Planning 😂`,
+  `${name}चा भन्नाट अंदाज 😆`,
+  `${name}चा वेगळाच स्वॅग 😜`
+];
 
     if (language.toLowerCase() === "marathi") {
       if (isToast) {
@@ -326,7 +365,7 @@ Body: ...
       }
 
       return {
-        title: `${name} म्हणजे वेगळाच नमुना 😂`,
+        title: roastTitles[Math.floor(Math.random() * roastTitles.length)],
         body: `${name} साधं काम पण अवघड करून दाखवतो. आत्मविश्वास मात्र भन्नाट आहे. कसं काय manage करतो देव जाणे. पण entertainment full आहे.`,
         source: "fallback",
         model: "template",
